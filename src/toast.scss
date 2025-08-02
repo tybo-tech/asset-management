@@ -1,0 +1,131 @@
+$app-toast-colors: (
+  warn: #f39c12,
+  info: #3498db,
+  success: #2ecc71,
+  error: #c0392b
+);
+
+.app-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  color: #333333;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 250px;
+  max-width: 400px;
+  animation: fadeInOut 0.5s ease-in-out;
+  pointer-events: none;
+  z-index: 10000000;
+
+  &.fade-out {
+    animation: fadeOut 0.5s ease-in-out forwards;
+  }
+
+  // Dynamic colors
+  @each $name, $color in $app-toast-colors {
+    &.#{$name} {
+      background-color: $color;
+      color: #ffffff;
+      border-color: $color;
+    }
+  }
+}
+
+// Animations
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+}
+
+
+// Overlay
+
+.app-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .modal {
+    background: var(--background-darker);
+    padding: 0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    width: 100%;
+    height: fit-content;
+    position: relative;
+    .header {
+      padding: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      h2 {
+        font-size: 1rem;
+        text-align: left;
+        font-weight: 900;
+      }
+      .close {
+        cursor: pointer;
+        font-size: .85rem;
+      }
+    }
+    .body {
+      padding: 1rem;
+    }
+  }
+
+  // Usage
+  /* 
+  <div class="app-overlay">
+    <div class="modal">
+      <div class="header">
+        <h2>Modal Title</h2>
+        <div class="close">
+         <i class="bi bi-x-lg"></i>
+        </div>
+      </div>
+      <div class="body">
+        Modal Content
+      </div>
+    </div>
+  </div> 
+  */
+}
+

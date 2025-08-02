@@ -1,0 +1,251 @@
+<div class="app-overlay" *ngIf="data && assert">
+  <div class="modal">
+    <!-- Header -->
+    <div class="header">
+      <h2>
+        <span>
+          {{ typeDesription }}
+        </span>
+
+        <span> ({{ assert.name }}) </span>
+      </h2>
+      <div class="close" (click)="onClose.emit()">
+        <i class="bi bi-x-lg"></i>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="body">
+      <div class="form-container">
+        <form class="body">
+          <div class="row">
+            <!-- Asset Name -->
+            <div [ngClass]="{ 'grid-2': data.category && data.id }">
+              <div class="form-floating mb-4">
+                <input
+                  type="text"
+                  readonly
+                  class="form-control"
+                  id="assert"
+                  placeholder="Asset Name"
+                  [(ngModel)]="assert.name"
+                  [ngModelOptions]="{ standalone: true }"
+                  required
+                />
+                <label for="assert"> Asset Name (Can not change) </label>
+              </div>
+
+              <!--Catergory, if id and  -->
+              <div class="form-floating mb-4" *ngIf="data.id && data.category">
+                <p class="form-control" id="createdDate">
+                  {{ data.category.name }}
+                </p>
+                <label for="category">Category</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quantity and Reason Code -->
+          <div class="grid-2">
+            <!-- Quantity -->
+            <div class="form-floating mb-4">
+              <input
+                type="number"
+                class="form-control"
+                id="quantity"
+                [readOnly]="data.id"
+                placeholder="Quantity"
+                [(ngModel)]="data.quantity"
+                [ngModelOptions]="{ standalone: true }"
+                min="1"
+                required
+              />
+              <label for="quantity">Quantity</label>
+            </div>
+
+            <!-- Reason Code -->
+            <div class="form-floating mb-4">
+              <select
+                class="form-select"
+                id="reasonCode"
+                [(ngModel)]="data.metadata.reasonCode"
+                [ngModelOptions]="{ standalone: true }"
+                required
+              >
+                <option value="" disabled selected>Select Reason</option>
+                <option
+                  [disabled]="data.id"
+                  *ngFor="let reason of reasons"
+                  [value]="reason"
+                >
+                  {{ reason }}
+                </option>
+              </select>
+              <label for="reasonCode">Reason Code</label>
+            </div>
+          </div>
+
+          <!-- Room and Requested By -->
+          <div class="grid-2" *ngIf="rooms.length">
+            <!-- Room -->
+            <div class="form-floating mb-4">
+              <select
+                class="form-select"
+                (change)="onRoomChange()"
+                id="RoomId"
+                [(ngModel)]="data.metadata.roomId"
+                [ngModelOptions]="{ standalone: true }"
+                required
+              >
+                <option value="0" disabled selected>Select Location</option>
+                <option
+                  [value]="room.Id"
+                  *ngFor="let room of rooms"
+                >
+                  {{ room.ItemValue.Name }}
+                </option>
+              </select>
+              <label for="Room">
+                {{
+                  isRestock
+                    ? "Select Storage (Location)"
+                    : "Assigned to (Location)"
+                }}</label
+              >
+            </div>
+
+            <!-- Requested By -->
+            <div class="form-floating mb-4">
+              <input
+                type="text"
+                class="form-control"
+                id="RoomId"
+                [(ngModel)]="data.metadata.requestedBy"
+                [ngModelOptions]="{ standalone: true }"
+                required
+              />
+
+              <label for="Room"> Requested By </label>
+            </div>
+          </div>
+
+          <!-- Creator and Created Date -->
+          <div class="grid-2" *ngIf="data.id && data.creator">
+            <!-- Creator -->
+            <div class="form-floating mb-4">
+              <p class="form-control" id="creator">
+                {{ data.creator.Name }}
+              </p>
+              <label for="creator"> Creator </label>
+            </div>
+
+            <!-- Created Date -->
+            <div class="form-floating mb-4">
+              <p class="form-control" id="createdDate">
+                {{ data.createdDate | date }}
+                {{ data.createdDate | date : "shortTime" }}
+              </p>
+              <label for="createdDate"> Created Date </label>
+            </div>
+          </div>
+
+          <div class="grid-2" *ngIf="isRestock">
+            <!-- Supplier and Condition -->
+            <div class="form-floating mb-4" *ngIf="suppliers.length">
+              <select
+                class="form-select"
+                id="SupplierId"
+                (change)="onSupplierChange()"
+                [(ngModel)]="data.metadata.supplierId"
+                [ngModelOptions]="{ standalone: true }"
+                required
+              >
+                <option value="0" disabled selected>Select Supplier</option>
+                <option
+                  [value]="supplier.Id"
+                  *ngFor="let supplier of suppliers"
+                >
+                  {{ supplier.ItemValue.Name }}
+                </option>
+              </select>
+              <label for="Supplier">Supplier</label>
+            </div>
+
+            <!-- Condition -->
+            <div class="form-floating mb-4">
+              <select
+                class="form-select"
+                id="condition"
+                [(ngModel)]="data.metadata.condition"
+                [ngModelOptions]="{ standalone: true }"
+                required
+              >
+                <option value="" disabled selected>Select Condition</option>
+                <option
+                  *ngFor="let condition of conditions"
+                  [disabled]="data.id"
+                  [value]="condition"
+                >
+                  {{ condition }}
+                </option>
+              </select>
+              <label for="condition">Condition</label>
+            </div>
+          </div>
+
+          <!-- 
+          <div class="grid-2" *ngIf="data.id">
+            <div class="form-floating mb-4">
+              <p class="form-control">
+                {{ data.createdDate | date }}
+              </p>
+              <label for="quantity"> Created Date </label>
+            </div>
+          </div> -->
+
+          <div class="alert alert-dark" role="alert" *ngIf="data.id">
+            <h6 class="mb-2">Update Status and add comments</h6>
+
+            <div class="form-floating mb-4">
+              <select
+                (change)="save()"
+                [(ngModel)]="data.status"
+                [ngModelOptions]="{ standalone: true }"
+                class="form-select"
+                style="text-transform: capitalize"
+              >
+                <option value="0" disabled selected>Select Status</option>
+                <option *ngFor="let status of statuses" [value]="status">
+                  {{ status }}
+                </option>
+              </select>
+              <label for="quantity"> Status</label>
+            </div>
+
+            <app-comments
+              [comments]="data.metadata.comments || []"
+              (onSave)="data.metadata.comments = $event; save(false)"
+            />
+          </div>
+
+          <div *ngIf="!data.id" class="alert alert-dark" role="alert">
+            <app-comments
+              [comments]="data.metadata.comments || []"
+              (onSave)="data.metadata.comments = $event"
+            />
+          </div>
+
+          <button
+            type="submit"
+            *ngIf="!data.id"
+            [disabled]="loading"
+            class="w-100 btn btn-primary mb-2"
+            (click)="save()"
+          >
+            {{ loading ? "Saving..." : "Save" }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

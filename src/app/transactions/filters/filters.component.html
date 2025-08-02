@@ -1,0 +1,69 @@
+<!-- Filter Panel -->
+<div class="filter-panel" (click)="openModal()">
+  <div class="filter-summary">
+    <span>Date: {{ selectedDateRange || "Select Date Range" }}</span> |
+    <span>Category: {{ selectedCategory || "All" }}</span> |
+    <span>Location: {{ selectedLocation || "All" }}</span> |
+    <span>Status: {{ selectedStatus || "All" }}</span>
+  </div>
+  <button class="btn-edit">Edit Filters</button>
+</div>
+
+<!-- Custom Modal -->
+<div class="overlay" *ngIf="isModalOpen">
+  <div class="my-modal">
+    <h3>Filters</h3>
+    <div class="grid-2">
+      <!-- Date Range -->
+      <div class="modal-field">
+        <label for="startDate">Start Date</label>
+        <input
+          type="date"
+          id="startDate"
+          [(ngModel)]="selectedDateRangeStart"
+        />
+      </div>
+      <div class="modal-field">
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" [(ngModel)]="selectedDateRangeEnd" />
+      </div>
+
+      <!-- Category -->
+      <div class="modal-field">
+        <label for="category">Category</label>
+        <select id="category" [(ngModel)]="selectedCategory">
+          <option value="">All</option>
+          <option *ngFor="let cat of categories" [value]="cat">
+            {{ cat }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Location -->
+      <div class="modal-field">
+        <label for="location">Location</label>
+        <select id="location" [(ngModel)]="selectedLocation">
+          <option value="">All</option>
+          <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
+        </select>
+      </div>
+
+      <!-- Status -->
+      <div class="modal-field">
+        <label for="status">Status</label>
+        <select id="status" [(ngModel)]="selectedStatus">
+          <option value="">All</option>
+          <option *ngFor="let stat of statuses" [value]="stat">
+            {{ stat }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Modal Buttons -->
+    <div class="modal-actions d-flex justify-content-end gap-3 mt-4">
+      <button class="btn-cancel" (click)="closeModal()">Cancel</button>
+      <button class="btn-apply" (click)="applyFilters()">Apply</button>
+    </div>
+  </div>
+</div>

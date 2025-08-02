@@ -1,0 +1,39 @@
+<section class="form-signin w-100 m-auto">
+  <form [formGroup]="signInForm" (ngSubmit)="login()">
+    <img [src]="logo" alt="" />
+    <h1 class="h4">
+      Welcome to Lodgistics: Asset Management - <span>Seaboard Living</span>
+    </h1>
+    <p>Enter your email address and password to login to your account.</p>
+    <div class="form-floating mb-4">
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        placeholder="Email address"
+        formControlName="email"
+        required
+      />
+      <label for="name">Email address</label>
+    </div>
+
+    <div class="form-floating mb-4">
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        placeholder="Password"
+        formControlName="password"
+        required
+      />
+      <label for="password">Password</label>
+    </div>
+    <button
+      type="submit"
+      class="btn btn-primary w-100"
+      [disabled]="signInForm.invalid"
+    >
+      <i class="bi bi-check-circle"></i> Login
+    </button>
+  </form>
+</section>

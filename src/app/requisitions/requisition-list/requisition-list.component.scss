@@ -1,0 +1,25 @@
+:host {
+    $rows: 7;
+  .list-container {
+    max-width: 100%;
+    .data-table {
+      .table-header {
+        grid-template-columns: repeat($rows, 1fr);
+      }
+      .table-row {
+        grid-template-columns: repeat($rows, 1fr);
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr 2fr; // Mobile grid with labels and values
+        }
+      }
+    }
+  }
+  .dropdown-toggle{
+    cursor: pointer !important;
+  }
+
+  .badge{
+    width: fit-content;
+    padding: 0.5rem 1rem;
+  }
+}

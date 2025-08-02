@@ -1,0 +1,21 @@
+:host {
+  .alert-dark{
+    background: rgb(48, 48, 48);
+    color: white !important;
+    border: none !important;
+  }
+  form{
+    max-height: 80vh !important;
+    overflow-y: auto;
+  }
+  .header {
+    h2 {
+      span {
+        &:first-child {
+          text-transform: capitalize;
+          color: var(--info);
+        }
+      }
+    }
+  }
+}

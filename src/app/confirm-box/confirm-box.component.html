@@ -1,0 +1,20 @@
+<div class="app-overlay">
+  <div class="modal">
+    <div class="header">
+      <h2>Confirm</h2>
+      <div class="close" (click)="onCancel()">
+        <i class="bi bi-x-lg"></i>
+      </div>
+    </div>
+    <div class="body">
+      <div class="confirm-box p-2">
+        <h2>{{ title }}</h2>
+        <p>{{ message }}</p>
+        <div class="d-flex gap-3 align-items-center justify-content-end mt-4">
+          <button class="btn btn-light" (click)="onCancel()">Cancel</button>
+          <button class="btn btn-warning" (click)="onConfirm()">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

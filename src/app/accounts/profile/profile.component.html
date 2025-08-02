@@ -1,0 +1,44 @@
+<section class="" *ngIf="user">
+  <div class="container mt-4" *ngIf="user">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <h1 class="h4">
+          My Profile
+        </h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Contact Information -->
+      <div class="col-md-6">
+        <div class="card text-bg-dark">
+          <div class="card-header">
+            <h4 class="text-left w-100">Account Information</h4>
+          </div>
+          <div class="card-body">
+            <p class="card-text">
+              <i class="bi bi-person"></i> <strong>Name:</strong>
+              {{ user.Name }}
+            </p>
+            <p class="card-text">
+              <i class="bi bi-envelope"></i> <strong>Email:</strong>
+              {{ user.Email }}
+            </p>
+            <p class="card-text">
+              <i class="bi bi-phone"></i> <strong>Phone Number:</strong>
+              {{ user.PhoneNumber || "Not Provided" }}
+            </p>
+            <p class="card-text">
+              <i class="bi bi-calendar"></i> <strong>Account Created:</strong>
+              {{ user.CreateDate | date : "medium" }}
+            </p>
+            <p class="card-text">
+              <i class="bi bi-lock"></i> <strong>Role:</strong>
+              {{ user.UserType }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

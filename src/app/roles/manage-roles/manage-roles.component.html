@@ -1,0 +1,62 @@
+<app-bread [pageName]="page.name" />
+<div class="list-container mb-5">
+  <div class="title-section">
+    <h5 class="w-fit">{{ page.name }}</h5>
+    <div class="d-flex">
+      <input
+        type="text"
+        class="form-control me-2"
+        placeholder="Search"
+        [(ngModel)]="search"
+      />
+      <a class="btn btn-primary" [routerLink]="page.addUrl">
+        <i class="bi bi-plus-circle"></i>
+        {{ page.addAction }}
+      </a>
+    </div>
+  </div>
+
+  <div class="data-table" *ngIf="roles.length > 0">
+    <!-- Table Headers (Visible on Desktop, Hidden on Mobile) -->
+    <div class="table-header">
+      <div *ngFor="let item of page.headers">
+        {{ item }}
+      </div>
+    </div>
+
+    <!-- Table Rows -->
+    <div class="table-row" *ngFor="let item of roles">
+      <div class="mobile-header">Name</div>
+      <div>{{ item.name }}</div>
+
+      <div class="mobile-header">Description</div>
+      <div>{{ item.description }}</div>
+
+      <div class="mobile-header">Can do</div>
+      <div>{{ item.features?.length }} Features</div>
+
+      <div class="mobile-header"></div>
+      <div class="d-flex justify-content-end gap-2">
+        <a class="btn btn-primary" [routerLink]="['/role', item.id]">
+          Edit <i class="bi bi-arrow-up-right"></i>
+        </a>
+
+        <button class="btn btn-dark" (click)="deleteRole(item)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-3" *ngIf="roles.length === 0">
+    <p>No {{ page.name.toLowerCase() }} available.</p>
+  </div>
+</div>
+
+<app-confirm-box
+  *ngIf="showConfirmDelete"
+  [title]="'Are you sure?'"
+  [message]="'Do you really want to delete this item?'"
+  (confirmResult)="handleDelete($event)"
+>
+</app-confirm-box>

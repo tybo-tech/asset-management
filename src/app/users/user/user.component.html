@@ -1,0 +1,92 @@
+<div class="form-container" *ngIf="data">
+  <div class="title-section">
+    <h5 class="w-fit">{{ page.name }}</h5>
+    <div class="d-flex">
+      <a class="btn btn-light" [routerLink]="page.listUrl">
+        <i class="bi bi-arrow-left"></i>
+        Back
+      </a>
+    </div>
+  </div>
+  <form class="body">
+    <div class="form-floating mb-4">
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        placeholder="Name"
+        [(ngModel)]="data.Name"
+        [ngModelOptions]="{ standalone: true }"
+        required
+      />
+      <label for="name">Name</label>
+    </div>
+
+    <div class="form-floating mb-4">
+      <input
+        type="email"
+        class="form-control"
+        id="name"
+        placeholder="Email"
+        [(ngModel)]="data.Email"
+        [ngModelOptions]="{ standalone: true }"
+        required
+      />
+      <label for="name">Email</label>
+    </div>
+
+    <!-- Phone -->
+    <div class="form-floating mb-4">
+      <input
+        type="text"
+        class="form-control"
+        id="phone"
+        placeholder="Phone"
+        [(ngModel)]="data.PhoneNumber"
+        [ngModelOptions]="{ standalone: true }"
+        required
+      />
+      <label for="phone">Phone</label>
+    </div>
+
+    <!-- Role -->
+    <div class="form-floating mb-4">
+      <select
+        class="form-select"
+        id="roleId"
+        [(ngModel)]="data.UserType"
+        [ngModelOptions]="{ standalone: true }"
+        required
+      >
+        <option value="" disabled selected>Select Role</option>
+        <option *ngFor="let role of roles" [value]="role.id">
+          {{ role.name }}
+        </option>
+      </select>
+      <label for="roleId">Role</label>
+    </div>
+
+    <div class="form-floating mb-4">
+      <a
+        class="d-flex w-100 justify-content-end passwordReveal"
+        (click)="passwordReveal = !passwordReveal"
+      >
+        {{ passwordReveal ? "Hide" : "Show" }} Password
+      </a>
+      <input
+        [type]="passwordReveal ? 'text' : 'password'"
+        class="form-control"
+        id="name"
+        placeholder="Password"
+        [(ngModel)]="data.Password"
+        [ngModelOptions]="{ standalone: true }"
+        required
+      />
+      <label for="name">Password</label>
+    </div>
+
+    <button type="submit" class="w-100 btn btn-primary mb-2" (click)="save()">
+      Save
+    </button>
+  </form>
+</div>

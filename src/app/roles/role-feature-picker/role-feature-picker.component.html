@@ -1,0 +1,53 @@
+<div class="body">
+  <app-table
+*ngIf="data"
+[showAddButton]="true"
+(addClick)="showPicker = true"
+componentTitle="Features allowed"
+[data]="data.features || []"
+[columns]="columns"
+/>
+</div>
+
+
+
+<div class="app-overlay" *ngIf="data && allFeatures && showPicker">
+  <div class="modal">
+    <!-- Header -->
+    <div class="header">
+      <h2>Manage Feature Roles</h2>
+      <div class="close" (click)="onClose()">
+        <i class="bi bi-x-lg"></i>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="body">
+      <div class="form-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Allowed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let feature of allFeatures">
+              <td>{{ feature.name }}</td>
+              <td>
+                <div class="checkbox-wrapper-2">
+                  <input
+                    type="checkbox"
+                    [checked]="isFeatureAllowed(feature)"
+                    (change)="toggleFeature(feature)"
+                    class="sc-gJwTLC ikxBAC"
+                  />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

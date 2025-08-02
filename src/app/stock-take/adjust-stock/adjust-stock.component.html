@@ -1,0 +1,121 @@
+<div class="app-overlay" *ngIf="data && assert">
+  <div class="modal">
+    <!-- Header -->
+    <div class="header">
+      <h2>
+        <span> Adjust Stock </span>
+
+        <span> ({{ assert.name }}) </span>
+      </h2>
+      <div class="close" (click)="onClose.emit()">
+        <i class="bi bi-x-lg"></i>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="body">
+      <div class="form-container">
+        <form class="body">
+          <div class="row">
+            <!-- Asset Name -->
+            <div [ngClass]="{ 'grid-2': data.category && data.id }">
+              <div class="form-floating mb-4">
+                <input
+                  type="text"
+                  readonly
+                  class="form-control"
+                  id="assert"
+                  placeholder="Asset Name"
+                  [(ngModel)]="assert.name"
+                  [ngModelOptions]="{ standalone: true }"
+                  required
+                />
+                <label for="assert"> Asset Name (Can not change) </label>
+              </div>
+
+              <!--Catergory, if id and  -->
+              <div class="form-floating mb-4" *ngIf="data.id && data.category">
+                <p class="form-control" id="createdDate">
+                  {{ data.category.name }}
+                </p>
+                <label for="category">Category</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quantity and Reason Code -->
+          <div class="grid-2">
+            <!-- Quantity -->
+            <div class="form-floating mb-4">
+              <input
+                type="number"
+                class="form-control"
+                id="quantity"
+                [readOnly]="data.id"
+                placeholder="Quantity"
+                [(ngModel)]="data.quantity"
+                [ngModelOptions]="{ standalone: true }"
+                required
+              />
+              <label for="quantity">Quantity</label>
+            </div>
+
+            <!-- Reason Code -->
+            <div class="form-floating mb-4">
+              <select
+                class="form-select"
+                id="reasonCode"
+                [(ngModel)]="data.metadata.reasonCode"
+                [ngModelOptions]="{ standalone: true }"
+                required
+              >
+                <option value="" disabled selected>Select Reason</option>
+                <option
+                  [disabled]="data.id"
+                  *ngFor="let reason of reasons"
+                  [value]="reason"
+                >
+                  {{ reason }}
+                </option>
+              </select>
+              <label for="reasonCode">Reason Code</label>
+            </div>
+          </div>
+
+          <div class="grid-1">
+            <!-- description -->
+            <div class="form-floating mb-4">
+              <textarea
+                class="form-control"
+                id="description"
+                [(ngModel)]="data.metadata.description"
+                [ngModelOptions]="{ standalone: true }"
+                required
+              ></textarea>
+              <label for="description">Description or Comment</label>
+            </div>
+          </div>
+
+          <!-- 
+            <div class="grid-2" *ngIf="data.id">
+              <div class="form-floating mb-4">
+                <p class="form-control">
+                  {{ data.createdDate | date }}
+                </p>
+                <label for="quantity"> Created Date </label>
+              </div>
+            </div> -->
+
+          <button
+            type="submit"
+            *ngIf="!data.id"
+            class="w-100 btn btn-primary mb-2"
+            (click)="save()"
+          >
+            Save
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+  }
+
+  .modal-container {
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .modal-body {
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .bg-dark-2 {
+    background-color: #1a1a1a;
+  }
+
+  .table-dark {
+    --bs-table-bg: #1a1a1a;
+    --bs-table-striped-bg: #1f1f1f;
+    --bs-table-hover-bg: #252525;
+  }
+
+  .distribution-table th {
+    font-weight: 500;
+    color: #aaa;
+  }
+
+  .empty-state {
+    opacity: 0.8;
+  }

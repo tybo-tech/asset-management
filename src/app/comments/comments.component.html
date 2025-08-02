@@ -1,0 +1,39 @@
+<div class="comments-wrapper" *ngIf="user">
+  <div class="comments">
+    <div class="comment" *ngFor="let item of comments">
+      <p
+        class="d-flex justify-content-between align-items-center comment-header"
+      >
+        <span class="comment-author">{{ item.createdBy }}</span>
+        <span class="comment-date">
+          {{ item.createdDate | date }}
+          <!-- Time -->
+          <span class="time">{{ item.createdDate | date : "shortTime" }} </span>
+        </span>
+      </p>
+
+      <p class="comment-body">
+        {{ item.comment }}
+      </p>
+    </div>
+  </div>
+
+  <div class="add-cooment">
+    <div class="form-floating">
+      <textarea
+        class="form-control"
+        id="comment"
+        [(ngModel)]="comment"
+      ></textarea>
+      <label for="comment">Add a comment</label>
+    </div>
+
+    <button
+      [disabled]="!comment"
+      class="btn btn-primary mt-2"
+      (click)="addComment()"
+    >
+      <i class="bi bi-chat-left-text"></i> 
+    </button>
+  </div>
+</div>

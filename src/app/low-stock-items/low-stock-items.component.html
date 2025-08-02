@@ -1,0 +1,24 @@
+<div *ngIf="list.length">
+  <table class="table table-dark table-striped table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Qty</th>
+        <th scope="col">Treashold</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of list" class="pointer" (click)="onRowClick(item)">
+        <td>
+          {{ item.name }}
+        </td>
+        <td>
+          {{ item.stockInHand }}
+        </td>
+        <td>
+          {{ item.minimumStockAlert }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

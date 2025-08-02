@@ -1,0 +1,34 @@
+<nav class="site-nav d-flex flex-column justify-content-between">
+  <div>
+    <ul class="nav flex-column">
+      <li class="nav-item brand-li">
+        <a class="brand" href="/dashboard">
+          <img [src]="logo" alt="" />
+        </a>
+      </li>
+      <li class="nav-item" *ngFor="let group of sideNavGroups">
+        <div class="nav-group" (click)="toggleGroup(group)">
+          <i [class]="group.icon"></i>
+          <span>{{ group.name }}</span>
+        </div>
+        <ul class="nav flex-column" *ngIf="group.open">
+          <li class="nav-item" *ngFor="let item of group.items">
+            <a
+              class="nav-link d-flex align-items-center"
+              [routerLink]="item.url"
+              routerLinkActive="active"
+              (click)="toggleMenu.emit()"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <i [class]="item.icon" class="me-2"></i>
+              {{ item.name }}
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="text-center p-3">
+    <small>© 2024 <b>Lodgistics V 1.21</b> Asset Management</small>
+  </div>
+</nav>

@@ -1,0 +1,11 @@
+:host {
+  .bread {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    .separator {
+      font-size: 0.75rem;
+    }
+  }
+}

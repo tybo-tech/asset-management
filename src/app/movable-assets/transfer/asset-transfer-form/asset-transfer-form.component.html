@@ -1,0 +1,157 @@
+<div class="transfer-form-overlay" (click)="closeForm()">
+  <div class="transfer-form-container" (click)="$event.stopPropagation()">
+    <div class="form-header">
+      <h5>
+        <i class="bi bi-arrow-left-right me-2"></i>
+        Transfer {{ assetType.name }}
+      </h5>
+      <button type="button" class="btn-close" (click)="closeForm()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="transfer-form-body">
+      <!-- Asset Info -->
+      <div class="asset-info-card">
+        <div class="asset-info">
+          <h6>{{ assetType.name }}</h6>
+          <p class="text-muted mb-1">{{ assetType.category }}</p>
+          <p class="text-muted small">{{ assetType.description }}</p>
+          <div class="asset-stats">
+            <span class="badge bg-info">Total: {{ assetType.total_quantity }}</span>
+            <span class="badge bg-success">Value: R{{ assetType.default_value | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <form #transferForm="ngForm" (ngSubmit)="submit()" class="transfer-form">
+        <!-- From Location -->
+        <div class="form-group">
+          <label for="fromLocation">From Location</label>
+          <select
+            id="fromLocation"
+            class="form-control"
+            [(ngModel)]="model.from_location_id"
+            name="from_location"
+          >
+            <option [ngValue]="null">-- New Stock (No Source) --</option>
+            <option *ngFor="let location of locations" [value]="location.id">
+              {{ location.name }}
+              <span *ngIf="location.building"> - {{ location.building }}</span>
+            </option>
+          </select>
+          <small class="form-text text-muted">
+            Leave blank if adding new stock from external source
+          </small>
+        </div>
+
+        <!-- To Location -->
+        <div class="form-group">
+          <label for="toLocation">To Location *</label>
+          <select
+            id="toLocation"
+            class="form-control"
+            [(ngModel)]="model.to_location_id"
+            name="to_location"
+            required
+            #toLocation="ngModel"
+          >
+            <option value="0">-- Select Destination --</option>
+            <option *ngFor="let location of locations" [value]="location.id">
+              {{ location.name }}
+              <span *ngIf="location.building"> - {{ location.building }}</span>
+            </option>
+          </select>
+          <div *ngIf="toLocation.invalid && toLocation.touched" class="text-danger mt-1">
+            Destination location is required
+          </div>
+        </div>
+
+        <!-- Quantity -->
+        <div class="form-group">
+          <label for="quantity">Quantity *</label>
+          <input
+            type="number"
+            id="quantity"
+            class="form-control"
+            [(ngModel)]="model.quantity"
+            name="quantity"
+            min="1"
+            required
+            #quantity="ngModel"
+          />
+          <div *ngIf="quantity.invalid && quantity.touched" class="text-danger mt-1">
+            <span *ngIf="quantity.errors?.['required']">Quantity is required</span>
+            <span *ngIf="quantity.errors?.['min']">Quantity must be at least 1</span>
+          </div>
+        </div>
+
+        <!-- Reason -->
+        <div class="form-group">
+          <label for="reason">Reason for Transfer</label>
+          <input
+            type="text"
+            id="reason"
+            class="form-control"
+            [(ngModel)]="model.reason"
+            name="reason"
+            placeholder="e.g., Office relocation, Equipment upgrade..."
+          />
+        </div>
+
+        <!-- Transfer Summary -->
+        <div class="transfer-summary">
+          <h6>Transfer Summary</h6>
+          <div class="summary-content">
+            <div class="summary-row">
+              <span>Asset:</span>
+              <span class="fw-bold">{{ assetType.name }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Quantity:</span>
+              <span class="fw-bold text-primary">{{ model.quantity }}</span>
+            </div>
+            <div class="summary-row">
+              <span>From:</span>
+              <span class="text-info">
+                {{ model.from_location_id ? getLocationName(model.from_location_id) : 'New Stock' }}
+              </span>
+            </div>
+            <div class="summary-row">
+              <span>To:</span>
+              <span class="text-success">
+                {{ model.to_location_id ? getLocationName(model.to_location_id) : 'Please select destination' }}
+              </span>
+            </div>
+            <div class="summary-row" *ngIf="model.reason">
+              <span>Reason:</span>
+              <span>{{ model.reason }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Total Value:</span>
+              <span class="fw-bold text-warning">
+                R{{ (model.quantity * (assetType.default_value || 0)) | number:'1.2-2' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary me-2" (click)="closeForm()">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="transferForm.invalid || saving || !model.to_location_id"
+          >
+            <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!saving" class="bi bi-check-circle me-1"></i>
+            {{ saving ? 'Processing Transfer...' : 'Complete Transfer' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

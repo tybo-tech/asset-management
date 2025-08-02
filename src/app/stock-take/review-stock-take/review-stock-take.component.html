@@ -1,0 +1,104 @@
+<div class="grid-2">
+  <div class="list-container">
+    <div class="title-section">
+      <h5 class="w-fit">
+        {{ title }}
+
+        <span *ngIf="stockTakeList.length" class="badge bg-dark">
+          {{ stockTakeList.length }}
+        </span>
+      </h5>
+
+      <div class="d-flex">
+        <input
+          type="search"
+          class="form-control me-2"
+          placeholder="Search by name..."
+          [(ngModel)]="search"
+        />
+       <div class="d-flex gap-2">
+        <button class="btn btn-primary" (click)="adjustAll()">
+          <i class="bi bi-check-circle mr-2"></i>
+          Adjust All
+        </button>
+
+        <a class="btn btn-primary" [href]="getPdfUrl" target="_blank">
+          <i class="bi bi-file-pdf"></i>
+          PDF Report
+        </a>
+       </div>
+      </div>
+    </div>
+
+    <div class="data-table" *ngIf="stockTakeList.length > 0">
+      <!-- Table Headers -->
+      <div class="table-header">
+        <div *ngFor="let item of headers">
+          {{ item }}
+        </div>
+      </div>
+
+      <!-- Table Rows -->
+      <div
+        class="table-row"
+        *ngFor="let item of stockTakeList | searchOtherInfo : search"
+      >
+        <div class="mobile-header">Code</div>
+        <div>{{ item.ItemValue.AssetCode }}</div>
+
+        <div class="mobile-header">Name</div>
+        <div>{{ item.ItemValue.AssetName }}</div>
+
+        <div class="mobile-header">Category</div>
+        <div>{{ item.ItemValue.AssetCategoryName }}</div>
+
+        <div class="mobile-header">Count Stock</div>
+        <div>
+          {{ item.ItemValue.Quantity }}
+        </div>
+
+        <div class="mobile-header">Theoretical Stock</div>
+        <div>
+          {{ item.ItemValue.TheoreticalQuantity }}
+        </div>
+
+        <div class="mobile-header">Variance</div>
+        <div>
+          {{ item.ItemValue.Variance }}
+        </div>
+
+        <div class="mobile-header" *ngIf="'balanced' !== item.Status">Adjust</div>
+        <button class="btn btn-primary" *ngIf="'balanced' !== item.Status" (click)="adjust(item)">
+          <i class="bi bi-check-circle mr-2"></i>
+          Adjust
+        </button>
+
+        <div class="badge status" *ngIf="'balanced' === item.Status">
+          {{ item.Status | titlecase }}
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="text-center mt-3"
+      *ngIf="stockTakeList.length === 0 && !loading"
+    >
+      <p>No {{ page.name.toLowerCase() }} available.</p>
+    </div>
+  </div>
+  <div class="comments">
+    <div class="card text-bg-dark">
+      <div class="card-body">
+        <h5 class="mb-4">Comments</h5>
+
+        <app-comments [comments]="commentList" (onSave)="saveComment($event)" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-adjust-stock
+(onClose)="adjustStock($event)"
+  *ngIf="selectedStockItem"
+  [selectedStockItem]="selectedStockItem"
+/>

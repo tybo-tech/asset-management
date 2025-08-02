@@ -1,0 +1,40 @@
+:host{
+     
+    .overview-card {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border: 1px solid #353535;
+        border-radius: 8px;
+        background-color: #363636;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    
+        i {
+          font-size: 2rem;
+          color: #913486; // Bootstrap primary color
+        }
+    
+        .details {
+          .count {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+            color: #dbdbdb;
+            text-transform: capitalize;
+          }
+    
+          .label {
+            font-size: 1rem;
+            margin: 0;
+            color: #b1d2ef;
+            text-transform: capitalize;
+          }
+        }
+    
+        &:hover {
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          transform: translateY(-2px);
+        }
+      }
+}

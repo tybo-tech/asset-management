@@ -1,0 +1,67 @@
+<div class="form-container" *ngIf="data && categories.length">
+  <div class="title-section">
+    <h5 class="w-fit">{{ page.name }}</h5>
+    <div class="d-flex">
+      <a class="btn btn-light" [routerLink]="page.listUrl">
+        <i class="bi bi-arrow-left"></i>
+        Back
+      </a>
+    </div>
+  </div>
+  <form class="body">
+    <div class="grid-1">
+      <div class="form-floating mb-4">
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          placeholder="Name*"
+          [(ngModel)]="data.name"
+          [ngModelOptions]="{ standalone: true }"
+          required
+        />
+        <label for="name">Name*</label>
+      </div>
+    </div>
+    <div class="grid-2">
+      <!-- Code -->
+      <div class="form-floating mb-4">
+        <input
+          type="text"
+          class="form-control"
+          id="code"
+          placeholder="Code*"
+          [(ngModel)]="data.code"
+          [ngModelOptions]="{ standalone: true }"
+          required
+        />
+        <label for="code">Code*</label>
+      </div>
+
+      <!-- Category -->
+      <div class="form-floating mb-4" *ngIf="categories.length">
+        <select
+          class="form-select"
+          id="categoryId"
+          [(ngModel)]="data.categoryId"
+          [ngModelOptions]="{ standalone: true }"
+          required
+        >
+          <option value="" disabled selected>Select Asset</option>
+          <option [value]="category.id" *ngFor="let category of categories">
+            {{ category.name }}
+          </option>
+        </select>
+        <label for="transactionType">Category*</label>
+      </div>
+    </div>
+
+
+    <div class="mb-4"></div>
+    <button type="submit" class="w-100 btn btn-primary mb-2" (click)="save()">
+      Save
+    </button>
+  </form>
+</div>
+
+<app-loader *ngIf="loading"></app-loader>

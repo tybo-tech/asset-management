@@ -1,0 +1,7 @@
+<app-table
+*ngIf="dataList.length"
+[data]="dataList"
+[columns]="columns"
+componentTitle="Select report to review"
+(rowClick)="rowClick($event)"
+/>

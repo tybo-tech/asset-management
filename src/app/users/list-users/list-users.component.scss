@@ -1,0 +1,15 @@
+$rows: 6;
+.list-container {
+    max-width: 1000px;
+  .data-table {
+    .table-header {
+      grid-template-columns: repeat($rows, 1fr);
+    }
+    .table-row {
+      grid-template-columns: repeat($rows, 1fr);
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr 2fr; // Mobile grid with labels and values
+      }
+    }
+  }
+}

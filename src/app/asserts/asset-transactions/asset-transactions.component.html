@@ -1,0 +1,59 @@
+<div *ngIf="list.length">
+  <table class="table table-dark table-striped table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Type</th>
+        <th scope="col">Qty</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of list" class="pointer" (click)="onRowClick(item)">
+        <td>
+          {{ item.transactionDate | date }}
+        </td>
+        <td>
+          <span *ngIf="item.transactionType === 'restock'">
+            <i class="bi bi-arrow-up text-success"></i>
+            Receive Stock
+          </span>
+          <span *ngIf="item.transactionType === 'usage'">
+            <i class="bi bi-arrow-down text-warning"></i>
+            Issue Out
+          </span>
+          <span *ngIf="item.transactionType === 'stock-adjustment'">
+            <i class="bi bi-wrench text-info"></i>
+            Stock Adjustment
+          </span>
+        </td>
+        <td>
+          {{ item.quantity }}
+        </td>
+        <td>
+          {{ item.status | titlecase }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <app-transaction
+    *ngIf="selectedAsset && selectedTransaction"
+    [assert]="selectedAsset"
+    [data]="selectedTransaction"
+    [transactionType]="selectedTransaction.transactionType"
+    (onClose)="OnClose()"
+    itemId="add"
+    [isAdd]="false"
+  />
+
+  <app-loader *ngIf="loading"></app-loader>
+</div>
+
+<div *ngIf="!list.length">
+  <div class="alert alert-dark bg-dark text-light" role="alert">
+    <h6>No transactions available.</h6>
+
+    <p>Transactions will be displayed here once they are available.</p>
+  </div>
+</div>

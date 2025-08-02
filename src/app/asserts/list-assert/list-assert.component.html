@@ -1,0 +1,179 @@
+<app-bread pageName="List Assets" />
+
+<div class="list-container" *ngIf="accessChecked">
+  <div class="title-section">
+    <h5 class="w-fit">
+      {{ page.name }}
+
+      <span *ngIf="list.length" class="badge bg-dark">
+        {{ list.length }}
+      </span>
+    </h5>
+
+    <div class="d-flex filter-section align-items-center gap-2">
+      <!-- Sort by -->
+       <p>
+        Sort by:
+       </p>
+      <select
+        class="form-select me-2"
+        [(ngModel)]="orderBy.orderBy"
+        (change)="onSortChange()"
+      >
+        <option value="code">Sort by Code</option>
+        <option value="name">Sort by Name</option>
+        <option value="status">Sort by Status</option>
+        <option value="stock">Sort by Stock</option>
+        <option value="category">Sort by Category</option>
+        <option value="type">Sort by Type</option>
+      </select>
+      <select
+        class="form-select me-2"
+        [(ngModel)]="orderBy.order"
+        (change)="onSortChange()"
+      >
+        <option value="ASC">Ascending</option>
+        <option value="DESC">Descending</option>
+      </select>
+       <!-- Order -->
+
+      <p class="mx-2">Filter by:</p>
+      <!-- Filter by category: -->
+      <select
+        class="form-select me-2"
+        [(ngModel)]="selectedCategory"
+        (change)="onCategoryChange()"
+      >
+        <option value="">All Categories</option>
+        <option *ngFor="let item of categories" [value]="item">
+          {{ item }}
+        </option>
+      </select>
+
+      <!-- Filter by asset type: -->
+      <select
+        class="form-select me-2"
+        [(ngModel)]="selectedAssetType"
+        (change)="onAssetTypeChange()"
+      >
+        <option value="">All Types</option>
+        <option *ngFor="let item of assetTypes" [value]="item">
+          {{ item }}
+        </option>
+      </select>
+      <input
+        type="text"
+        class="form-control me-2"
+        placeholder="Search"
+        [(ngModel)]="search"
+      />
+      <div class="d-flex align-items-center gap-2">
+        <a class="btn btn-primary" [routerLink]="page.addUrl" *ngIf="userService.canAccess(FEATURE_NAMES.addAsset)">
+          <i class="bi bi-plus-circle"></i>
+          {{ page.addAction }}
+        </a>
+
+        <a 
+        *ngIf="userService.canAccess(FEATURE_NAMES.exportAssets)"
+        class="btn btn-dark" (click)="exportToCsv()"> Export to CSV </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="data-table" *ngIf="list.length > 0">
+    <!-- Table Headers -->
+    <div class="table-header">
+      <div *ngFor="let item of page.headers">
+        {{ item }}
+      </div>
+    </div>
+
+    <!-- Table Rows -->
+    <div class="table-row" *ngFor="let item of list | searchAsset : search">
+      <div class="mobile-header">Code</div>
+      <div>{{ item.code }}</div>
+
+      <div class="mobile-header">Name</div>
+      <div>{{ item.name }}</div>
+
+      <div class="mobile-header">Status</div>
+      <div>{{ item.status }}</div>
+
+      <div class="mobile-header">Stock</div>
+      <div>{{ item.stockInHand }}</div>
+
+      <div class="mobile-header">Category</div>
+      <div>{{ item.categoryName }}</div>
+
+      <div class="mobile-header">Type</div>
+      <div>{{ item.assetType || "---" }}</div>
+
+      <div>
+        <div class="dropdown">
+          <button
+            class="btn btn-primary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            More
+          </button>
+          <ul
+            class="dropdown-menu dropdown-menu-dark"
+            aria-labelledby="dropdownMenuButton"
+          >
+            <li>
+              <a class="dropdown-item" [routerLink]="['/asset', item.id]">
+                <i class="bi bi-pencil-square"></i> Details
+              </a>
+            </li>
+            <li>
+              <button class="dropdown-item" (click)="onRestock(item)">
+                <i class="bi bi-box-arrow-in-down"></i> Receive Stock
+              </button>
+            </li>
+            <li>
+              <button class="dropdown-item" (click)="onUsage(item)">
+                <i class="bi bi-box-arrow-up"></i> Issue Out
+              </button>
+            </li>
+            <li>
+              <button class="dropdown-item bg-danger" 
+              (click)="onDelete(item)">
+                <i class="bi bi-trash"></i> Delete
+              </button>
+            </li>
+            <!-- <li>
+              <button class="dropdown-item" (click)="onDamages(item)">
+                <i class="bi bi-box-arrow-up"></i> Capture damages
+              </button>
+            </li> -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    <app-transaction
+      *ngIf="selectedAsset && transaction"
+      [assert]="selectedAsset"
+      [data]="transaction"
+      [transactionType]="transactionType"
+      (onClose)="selectedAsset = undefined"
+      [isAdd]="true"
+      itemId="add"
+    />
+  </div>
+
+  <div class="text-center mt-3" *ngIf="list.length === 0 && !loading">
+    <p>No {{ page.name.toLowerCase() }} available.</p>
+  </div>
+</div>
+
+
+
+<app-confirm-box
+*ngIf="showConfirm"
+  [title]="'Are you sure?'"
+  [message]="'Do you really want to delete this item?'"
+  (confirmResult)="handleConfirm($event)">
+</app-confirm-box>

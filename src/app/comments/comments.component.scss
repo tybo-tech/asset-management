@@ -1,0 +1,31 @@
+.comments-wrapper {
+  .comments {
+    .comment {
+      border-bottom: 1px solid #414141;
+      padding: 1rem;
+      .comment-header {
+        font-size: 0.7rem;
+        opacity: 0.7;
+        .time {
+          font-size: 0.6rem;
+        }
+      }
+      .comment-body {
+        font-size: 0.9rem;
+      }
+    }
+  }
+  .add-cooment {
+    position: relative;
+    button {
+      position: absolute;
+      right: 0.5rem;
+      bottom: 0.5rem;
+      &:disabled {
+        opacity: 0.5;
+        background: rgb(121, 121, 121) !important;
+        border: none !important;
+      }
+    }
+  }
+}

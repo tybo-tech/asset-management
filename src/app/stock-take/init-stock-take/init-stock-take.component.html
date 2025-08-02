@@ -1,0 +1,10 @@
+<div class="grid-2">
+  <ng-container *ngIf="id === 'category'">
+    <app-table
+      componentTitle="Choose category"
+      [data]="options"
+      [columns]="columns"
+      (rowClick)="onRowClick($event)"
+    />
+  </ng-container>
+</div>

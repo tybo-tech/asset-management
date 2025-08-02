@@ -1,0 +1,149 @@
+<div class="list-container">
+  <div class="title-section">
+    <h5 class="w-fit">
+      Asset Types
+
+      <span *ngIf="assetTypes.length" class="badge bg-dark">
+        {{ assetTypes.length }}
+      </span>
+    </h5>
+
+    <div class="d-flex align-items-center">
+      <input
+        type="text"
+        class="form-control me-2"
+        placeholder="Search asset types..."
+        [(ngModel)]="searchTerm"
+        style="width: 250px;"
+      />
+      <button class="btn btn-primary me-2" (click)="initNewItem()">
+        <i class="bi bi-plus-circle"></i>
+        Add Asset Type
+      </button>
+      <button class="btn btn-dark" (click)="exportToCsv()">
+        <i class="bi bi-download"></i>
+        Export CSV
+      </button>
+    </div>
+  </div>
+
+  <div class="data-table">
+    <!-- Table Headers (Visible on Desktop, Hidden on Mobile) -->
+    <div class="table-header" style="grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1fr;">
+      <div>Name & Description</div>
+      <div>Category</div>
+      <div>Total Qty</div>
+      <div>Default Value</div>
+      <div>Status</div>
+      <div>Actions</div>
+    </div>
+
+    <!-- Table Rows -->
+    <div
+      class="table-row"
+      style="grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 1fr;"
+      *ngFor="let assetType of filteredAssetTypes"
+    >
+      <!-- Name & Description -->
+      <div class="mobile-header">Name</div>
+      <div>
+        <div class="fw-bold">{{ assetType.name }}</div>
+        <div class="text-muted" style="font-size: 0.7rem; margin-top: 0.2rem;">
+          {{ assetType.description }}
+        </div>
+        <div *ngIf="assetType.metadata" class="metadata-tags mt-1">
+          <span
+            *ngFor="let tag of getMetadataTags(assetType.metadata)"
+            class="badge bg-secondary me-1"
+            style="font-size: 0.6rem;">
+            {{ tag }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Category -->
+      <div class="mobile-header">Category</div>
+      <div>
+        <span class="category-badge">{{ assetType.category }}</span>
+      </div>
+
+      <!-- Total Quantity -->
+      <div class="mobile-header">Total Qty</div>
+      <div>
+        <span class="quantity-badge">{{ assetType.total_quantity }}</span>
+      </div>
+
+      <!-- Default Value -->
+      <div class="mobile-header">Value</div>
+      <div>
+        <span class="value-display">R{{ assetType.default_value | number:'1.2-2' }}</span>
+      </div>
+
+      <!-- Status -->
+      <div class="mobile-header">Status</div>
+      <div>
+        <span class="status-indicator status-active">Active</span>
+      </div>
+
+      <!-- Actions -->
+      <div class="mobile-header">Actions</div>
+      <div class="action-buttons">
+        <button
+          class="btn btn-sm btn-outline-primary me-1"
+          (click)="selectItemToEdit(assetType)"
+          title="Edit Asset Type">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button
+          class="btn btn-sm btn-outline-info me-1"
+          (click)="viewDistribution(assetType)"
+          title="View Distribution">
+          <i class="bi bi-geo-alt"></i>
+        </button>
+        <button
+          class="btn btn-sm btn-outline-success"
+          (click)="transferAsset(assetType)"
+          title="Transfer Assets">
+          <i class="bi bi-arrow-left-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-3" *ngIf="filteredAssetTypes.length === 0 && !loading">
+    <div class="empty-state">
+      <i class="bi bi-box-seam" style="font-size: 3rem; color: var(--grey);"></i>
+      <p class="mt-2">No asset types found.</p>
+      <button class="btn btn-primary" (click)="initNewItem()">
+        <i class="bi bi-plus-circle"></i>
+        Create First Asset Type
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Form Modal -->
+<app-asset-type-form
+  *ngIf="showAddForm || showEditForm"
+  [asset]="showEditForm ? itemToEdit! : newItem!"
+  (formSubmitted)="onAssetTypeSaved($event)"
+  (onClose)="closeForm()"
+/>
+
+<!-- Transfer Form Modal -->
+<app-asset-transfer-form
+  *ngIf="showTransferForm"
+  [assetType]="selectedAssetType!"
+  (onClose)="closeTransferForm()"
+  (onSuccess)="onTransferSuccess()"
+/>
+
+<!-- Distribution View Modal -->
+<app-asset-distribution
+  *ngIf="showDistribution"
+  [assetType]="selectedDistribution!"
+  (onClose)="closeDistribution()"
+  (onTransfer)="onTransferFromDistribution($event)"
+/>
+
+<app-loader *ngIf="loading"></app-loader>

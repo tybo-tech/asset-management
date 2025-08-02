@@ -1,0 +1,9 @@
+<div class="mb-2" *ngIf="stat">
+    <a [routerLink]="stat.url" class="overview-card d-flex align-items-center">
+      <i [class]="stat.icon || getIcon(stat)"></i>
+      <div class="details ms-3">
+        <h5 class="count">{{ stat.Label }}</h5>
+        <p class="label">{{ stat.Value }}</p>
+      </div>
+    </a>
+  </div>

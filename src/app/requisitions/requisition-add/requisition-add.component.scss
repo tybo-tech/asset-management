@@ -1,0 +1,53 @@
+:host {
+  $border-color: rgb(75, 74, 74);
+  .form-container{
+    width: 800px;
+    max-width: 90%;
+  }
+  .table-responsive {
+    td,
+    th {
+      color: white;
+      border-color: $border-color;
+    }
+  }
+  .modal-overlay {
+    background: rgba(99, 99, 99, 0.853);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    .modal-container {
+      background: var(--black);
+      padding: 0;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      width: 700px;
+      max-width: 90%;
+      .header {
+        border-bottom: 1px solid var(--background-darker);
+      }
+      .content {
+        max-height: 80vh;
+        overflow-y: auto;
+        .list-group {
+          .list-group-item {
+            background: rgba(0, 0, 0, 0.073);
+            color: rgb(161, 161, 161);
+            border-color: $border-color;
+            font-size: 0.85rem;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+  
+}
+

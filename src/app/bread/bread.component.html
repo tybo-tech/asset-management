@@ -1,0 +1,11 @@
+<div class="bread">
+  <ng-container *ngFor="let item of links">
+    <a [routerLink]="item.link" *ngIf="item.link">
+      {{ item.name }}
+    </a>
+    <a *ngIf="!item.link">
+      {{ item.name }}
+    </a>
+    <i *ngIf="item.link" class="separator bi bi-chevron-double-right"></i>
+  </ng-container>
+</div>

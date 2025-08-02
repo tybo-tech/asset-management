@@ -1,0 +1,9 @@
+.overview-container {
+  padding: 2rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  // Phone
+  @media (max-width: 768px) {
+    padding: .5rem;
+  }
+}

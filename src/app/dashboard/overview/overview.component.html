@@ -1,0 +1,25 @@
+<div class="overview-container" *ngIf="stats && !loading">
+  <div class="grid-3 mb-5">
+    <app-numbers-chart  (itemClicked)="onRowClick($event)"  [items]="counts" *ngIf="counts && counts.length" />
+    <app-table
+      [data]="stats.topIssuedAssets"
+      [columns]="topIssuedAssets"
+      componentTitle="Most Issued Items"
+     
+    />
+    <app-table
+      [data]="stats.lowStock"
+      [columns]="lowStock"
+      componentTitle="Low Stock Items"
+    />
+    <app-doughnut
+      *ngIf="locationDonut"
+      [data]="locationDonut"
+      componentTitle="Issued by Location"
+    />
+    <app-bar-chart *ngIf="stockBar" componentTitle="Stock Levels" [data]="stockBar"/>
+    <app-line-chart componentTitle="Usage Trends"/>
+  </div>
+</div>
+
+<app-ghost *ngIf="loading"></app-ghost>

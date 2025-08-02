@@ -1,0 +1,43 @@
+<div class="form-container" *ngIf="data">
+  <div class="title-section">
+    <h5 class="w-fit">{{ page.name }}</h5>
+    <div class="d-flex">
+      <a class="btn btn-light" [routerLink]="page.listUrl">
+        <i class="bi bi-arrow-left"></i>
+        Back
+      </a>
+    </div>
+  </div>
+  <form class="body">
+    <div class="form-floating mb-4">
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        placeholder="Name"
+        [(ngModel)]="data.name"
+        [ngModelOptions]="{ standalone: true }"
+        required
+      />
+      <label for="name">Name</label>
+    </div>
+
+    <div class="form-floating mb-4">
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        placeholder="Code"
+        [(ngModel)]="data.code"
+        [ngModelOptions]="{ standalone: true }"
+        required
+      />
+      <label for="name">Code</label>
+    </div>
+
+    <button type="submit" class="w-100 btn btn-primary mb-2" (click)="save()">
+      Save
+    </button>
+  </form>
+</div>
+<app-loader *ngIf="loading"></app-loader>

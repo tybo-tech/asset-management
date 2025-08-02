@@ -1,0 +1,29 @@
+:host {
+  .grid-2{
+    grid-template-columns: 70% auto;
+    // Phone
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr; // Mobile grid with labels and values
+    }
+  }
+  $rows: 4;
+  .list-container {
+    .data-table {
+      .table-header {
+        grid-template-columns: repeat($rows, 1fr);
+      }
+      .table-row {
+        grid-template-columns: repeat($rows, 1fr);
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr 2fr; // Mobile grid with labels and values
+        }
+      }
+    }
+  }
+  .input-count{
+    border: 1px solid #ccc !important;
+    &:focus{
+      border: 1px solid #241e9a !important;
+    }
+  }
+}

@@ -1,0 +1,103 @@
+:host {
+  /* Filter Panel */
+  .filter-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background-color: var(--background);
+    border: 1px solid #3f3f3f;
+    border-radius: 5px;
+    cursor: pointer;
+
+    .filter-summary {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: #bbbbbb;
+    }
+
+    .btn-edit {
+      background-color: var(--background-darker);
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 1rem;
+    }
+  }
+
+  /* Overlay */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  /* Modal */
+  .my-modal {
+    background: var(--background-darker);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    display: block;
+
+    h3 {
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .modal-field {
+      margin-bottom: 0.1rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.1rem;
+        font-weight: 400;
+        font-size: 0.75rem;
+        color: rgb(216, 216, 216) !important;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: space-between;
+
+      .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .btn-apply {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+    }
+  }
+}

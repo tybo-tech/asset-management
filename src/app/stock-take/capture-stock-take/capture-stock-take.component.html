@@ -1,0 +1,91 @@
+<div class="grid-2" *ngIf="!loading">
+  <div class="list-container">
+    <div class="title-section">
+      <h5 class="w-fit">
+        {{ title }}
+
+        <span *ngIf="stockTakeList.length" class="badge bg-dark">
+          {{ stockTakeList.length }}
+        </span>
+      </h5>
+
+      <div class="d-flex">
+        <input
+          type="search"
+          class="form-control me-2"
+          placeholder="Search by name..."
+          [(ngModel)]="search"
+        />
+        <a class="btn btn-primary" [href]="getPdfUrl" target="_blank">
+          <i class="bi bi-download"></i>
+          Stocktake form
+        </a>
+      </div>
+    </div>
+
+    <div class="data-table" *ngIf="stockTakeList.length > 0">
+      <!-- Table Headers -->
+      <div class="table-header">
+        <div *ngFor="let item of page.headers">
+          {{ item }}
+        </div>
+      </div>
+
+      <!-- Table Rows -->
+      <div
+        class="table-row"
+        *ngFor="let item of stockTakeList | searchOtherInfo : search"
+      >
+        <div class="mobile-header">Code</div>
+        <div>{{ item.ItemValue.AssetCode }}</div>
+
+        <div class="mobile-header">Name</div>
+        <div>{{ item.ItemValue.AssetName }}</div>
+
+        <div class="mobile-header">Category</div>
+        <div>{{ item.ItemValue.AssetCategoryName }}</div>
+
+        <div class="mobile-header">Count Stock</div>
+        <div>
+          <input
+            type="number"
+            class="form-control me-2 input-count"
+            placeholder="Enter Count"
+            [(ngModel)]="item.ItemValue.Quantity"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="text-center mt-3"
+      *ngIf="stockTakeList.length === 0 && !loading"
+    >
+      <p>No {{ page.name.toLowerCase() }} available.</p>
+    </div>
+  </div>
+  <div class="form-container" *ngIf="stockTakeList.length">
+    <div class="title-section">
+      <h5 class="w-fit">Stocktake Details</h5>
+    </div>
+    <form class="body">
+      <div class="form-floating mb-4">
+        <input
+          type="search"
+          class="form-control"
+          id="name"
+          [disabled]="!!stockTakeList[0].CreateDate"
+          placeholder="Stocktake Name*"
+          [(ngModel)]="stockTakeList[0].Name"
+          [ngModelOptions]="{ standalone: true }"
+          required
+        />
+        <label for="name">Stocktake Name*</label>
+      </div>
+
+      <button type="submit" class="w-100 btn btn-primary mb-2" (click)="save()">
+        Save
+      </button>
+    </form>
+  </div>
+</div>

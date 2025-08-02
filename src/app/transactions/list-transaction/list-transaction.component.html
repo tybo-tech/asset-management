@@ -1,0 +1,97 @@
+<div class="list-container">
+  <div class="title-section">
+    <h5 class="w-fit">
+      {{ page.name }}
+
+      <span *ngIf="list.length" class="badge bg-dark">
+        {{ list.length }}
+      </span>
+    </h5>
+
+    <div class="d-flex align-items-center">
+      <input
+        type="text"
+        class="form-control me-2"
+        placeholder="Search"
+        [(ngModel)]="search"
+      />
+      <!-- <a class="btn btn-primary" [routerLink]="page.addUrl">
+        <i class="bi bi-plus-circle"></i>
+        {{ page.addAction }}
+      </a> -->
+      <a class="btn btn-dark" (click)="exportToCsv()"> Export to CSV </a>
+    </div>
+  </div>
+
+  <div class="data-table">
+    <!-- Table Headers (Visible on Desktop, Hidden on Mobile) -->
+    <div class="d-flex gap-3 align-items-center mb-5 mt-3">
+      <app-transaction-tabs />
+      <app-filters (filtersApplied)="onFiltersApplied($event)" />
+    </div>
+    <div class="table-header">
+      <div *ngFor="let item of page.headers">
+        {{ item }}
+      </div>
+    </div>
+
+    <!-- Table Rows -->
+    <div
+      class="table-row"
+      *ngFor="let item of list | searchTransaction : search"
+    >
+      <!-- <div class="mobile-header">Type</div>
+      <div [ngClass]="item.transactionType">{{ item.transactionType }}</div> -->
+
+      <div class="mobile-header">Asset</div>
+      <div>{{ item.assetName }}</div>
+
+      <div class="mobile-header">Category</div>
+      <div>{{ item.categoryName }}</div>
+
+      <div class="mobile-header">Qty</div>
+      <div>{{ item.quantity }}</div>
+
+      <div class="mobile-header">Status</div>
+      <div>{{ item.status | titlecase }}</div>
+
+      <div class="mobile-header">Date</div>
+      <div>{{ item.transactionDate | date }}</div>
+
+      <div class="mobile-header">Location</div>
+      <div *ngIf="item.metadata.roomId">
+        {{ getSiteName(item.metadata.roomId) }}
+      </div>
+      <div *ngIf="!item.metadata.roomId">Not Assigned</div>
+
+      <div class="mobile-header">Requested By</div>
+      <div>{{ item.metadata.requestedBy }}</div>
+
+      <div class="mobile-header">Created By</div>
+      <div>{{ item.createdByName }}</div>
+
+      <div class="mobile-header"></div>
+      <div>
+        <button (click)="onSelection(item)" class="btn btn-primary">
+          Details <i class="bi bi-arrow-up-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-3" *ngIf="list.length === 0">
+    <p>No {{ page.name.toLowerCase() }} available.</p>
+  </div>
+</div>
+
+<app-transaction
+  *ngIf="selectedAsset && selectedTransaction"
+  [assert]="selectedAsset"
+  [data]="selectedTransaction"
+  [transactionType]="selectedTransaction.transactionType"
+  (onClose)="selectedAsset = undefined; getAll()"
+  itemId="add"
+  [isAdd]="false"
+/>
+
+<app-loader *ngIf="loading"></app-loader>

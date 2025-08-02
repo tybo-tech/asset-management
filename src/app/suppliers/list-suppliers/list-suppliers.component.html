@@ -1,0 +1,50 @@
+<app-bread [pageName]="page.name" />
+<div class="list-container">
+  <div class="title-section">
+    <h5 class="w-fit">{{ page.name }}</h5>
+    <div class="d-flex">
+      <input
+        type="text"
+        class="form-control me-2"
+        placeholder="Search"
+        [(ngModel)]="search"
+      />
+      <a class="btn btn-primary" [routerLink]="page.addUrl">
+        <i class="bi bi-plus-circle"></i>
+        {{ page.addAction }}
+      </a>
+    </div>
+  </div>
+
+  <div class="data-table" *ngIf="suppliers.length > 0">
+    <!-- Table Headers (Visible on Desktop, Hidden on Mobile) -->
+    <div class="table-header">
+      <div *ngFor="let item of page.headers">
+        {{ item }}
+      </div>
+    </div>
+
+    <!-- Table Rows -->
+    <div class="table-row" *ngFor="let item of suppliers">
+      <div class="mobile-header">Name</div>
+      <div>{{ item.ItemValue.Name }}</div>
+
+      <div class="mobile-header">Type</div>
+      <div>{{ item.ItemValue.PhoneNumber }}</div>
+
+        <div class="mobile-header">Email</div>
+        <div>{{ item.ItemValue.Email }}</div>
+
+      <div class="mobile-header"></div>
+      <div>
+        <a class="btn btn-primary" [routerLink]="['/supplier', item.Slug]">
+          Edit <i class="bi bi-arrow-up-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-3" *ngIf="suppliers.length === 0">
+    <p>No {{ page.name.toLowerCase() }} available.</p>
+  </div>
+</div>

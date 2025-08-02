@@ -1,0 +1,14 @@
+<div class="main-app">
+  <div class="nav-wrapper" [ngClass]="menuClass">
+    <app-site-navigation  (toggleMenu)="toggleMenu()"/>
+    <div class="close">
+      <i class="bi bi-x" (click)="toggleMenu()"></i>
+    </div>
+  </div>
+  <div class="p-0">
+    <app-top-bar (toggleMenu)="toggleMenu()"></app-top-bar>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

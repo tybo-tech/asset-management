@@ -1,0 +1,11 @@
+<div class="tabs">
+  <a
+    href=""
+    *ngFor="let item of tabs"
+    [routerLink]="item.url"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    {{ item.label }}
+  </a>
+</div>

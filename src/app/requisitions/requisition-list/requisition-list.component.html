@@ -1,0 +1,161 @@
+<app-bread pageName="List Requisitions" />
+
+<div class="list-container">
+  <div class="title-section">
+    <h5 class="w-fit">
+      {{ page.name }}
+
+      <span *ngIf="list.length" class="badge bg-dark">
+        {{ list.length }}
+      </span>
+    </h5>
+
+    <div class="d-flex">
+      <!-- Filter by status -->
+      <select
+        class="form-select me-2"
+        [(ngModel)]="selectedStatus"
+        (change)="onStatusChange()"
+      >
+        <option value="">All Statuses</option>
+        <option *ngFor="let status of statuses" [value]="status">
+          {{ status }}
+        </option>
+      </select>
+
+      <!-- Filter by requisition type -->
+      <select
+        class="form-select me-2"
+        [(ngModel)]="selectedType"
+        (change)="onTypeChange()"
+      >
+        <option value="">All Types</option>
+        <option *ngFor="let type of types" [value]="type">
+          {{ type }}
+        </option>
+      </select>
+
+      <input
+        type="text"
+        class="form-control me-2"
+        placeholder="Search"
+        [(ngModel)]="search"
+      />
+
+      <div class="d-flex align-items-center gap-2">
+        <a class="btn btn-primary" [routerLink]="page.addUrl">
+          <i class="bi bi-plus-circle"></i>
+          {{ page.addAction }}
+        </a>
+
+        <a class="btn btn-dark" (click)="exportToCsv()"> Export to CSV </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="data-table" *ngIf="list.length > 0">
+    <!-- Table Headers -->
+    <div class="table-header">
+      <div>Request Number</div>
+      <div>Type</div>
+      <div>Status</div>
+      <div>Requested By</div>
+      <div>Site</div>
+      <div>Actions</div>
+    </div>
+
+    <!-- Table Rows -->
+    <div class="table-row" *ngFor="let item of list">
+      <div class="mobile-header">Request Number</div>
+      <div>{{ item.requestNumber }}</div>
+
+      <div class="mobile-header">Type</div>
+      <div>{{ item.type }}</div>
+
+      <div class="mobile-header">Status</div>
+      <div
+        class="badge"
+        [ngClass]="{
+          'bg-success w-fit': item.status === 'approved',
+          'bg-warning text-dark': item.status === 'pending',
+          'bg-danger': item.status === 'rejected'
+        }"
+      >
+        {{ item.status }}
+      </div>
+
+      <div class="mobile-header">Requested By</div>
+      <div>{{ item.requestedBy }}</div>
+
+      <div class="mobile-header">Site</div>
+      <div>{{ getSiteName(item.site) }}</div>
+
+      <div>
+        <div class="dropdown">
+          <button
+            class="btn btn-primary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            More
+          </button>
+          <ul
+            class="dropdown-menu dropdown-menu-dark"
+            aria-labelledby="dropdownMenuButton"
+          >
+            <li>
+              <a class="dropdown-item" [routerLink]="['/requisition', item.id]">
+                <i class="bi bi-pencil-square"></i> Details
+              </a>
+            </li>
+            <li>
+              <a
+                class="btn btn-primary"
+                [href]="getPdfUrl(item.id || 0)"
+                target="_blank"
+              >
+                <i class="bi bi-download"></i>
+                Download PDF
+              </a>
+            </li>
+            <li *ngIf="item.status === 'pending'">
+              <button
+                class="dropdown-item bg-success"
+                (click)="approveRequisition(item)"
+              >
+                <i class="bi bi-check-circle"></i> Approve
+              </button>
+            </li>
+            <li *ngIf="item.status === 'pending'">
+              <button
+                class="dropdown-item bg-warning"
+                (click)="rejectRequisition(item)"
+              >
+                <i class="bi bi-x-circle"></i> Reject
+              </button>
+            </li>
+            <li>
+              <button class="dropdown-item bg-danger" (click)="onDelete(item)">
+                <i class="bi bi-trash"></i> Delete
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-3" *ngIf="list.length === 0 && !loading">
+    <p>No requisitions available.</p>
+  </div>
+</div>
+
+<app-confirm-box
+  *ngIf="showConfirm"
+  [title]="'Are you sure?'"
+  [message]="'Do you really want to delete this requisition?'"
+  (confirmResult)="handleConfirm($event)"
+>
+</app-confirm-box>
