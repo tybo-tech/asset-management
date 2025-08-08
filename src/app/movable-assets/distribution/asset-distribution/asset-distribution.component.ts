@@ -19,12 +19,15 @@ export class AssetDistributionComponent implements OnInit {
   distribution: IAssetLocation[] = [];
   locations: ILocation[] = [];
   loading = false;
+  showDiscrepancies = false;
+  consistencyValidation: any = null;
 
   constructor(private movableAssetService: MovableAssetService) {}
 
   ngOnInit() {
     this.loadDistribution();
     this.loadLocations();
+    this.validateConsistency();
   }
 
   loadDistribution() {
@@ -82,5 +85,51 @@ export class AssetDistributionComponent implements OnInit {
 
   closeModal() {
     this.onClose.emit();
+  }
+
+  // 🔍 Data Consistency Methods
+
+  validateConsistency() {
+    this.movableAssetService
+      .validateConsistency(this.assetType.id!)
+      .subscribe({
+        next: (validation) => {
+          this.consistencyValidation = validation;
+          if (validation.has_discrepancies) {
+            this.showDiscrepancies = true;
+          }
+        },
+        error: (err) => {
+          console.error('Error validating consistency:', err);
+        },
+      });
+  }
+
+  reconcileDistribution() {
+    if (
+      confirm(
+        'This will update distribution data based on actual computed values. This action cannot be undone. Continue?'
+      )
+    ) {
+      this.loading = true;
+      this.movableAssetService
+        .reconcileDistribution(this.assetType.id!)
+        .subscribe({
+          next: () => {
+            console.log('Distribution reconciled successfully');
+            this.loadDistribution(); // Refresh distribution data
+            this.validateConsistency(); // Re-validate
+            this.showDiscrepancies = false;
+          },
+          error: (err) => {
+            console.error('Error reconciling distribution:', err);
+            this.loading = false;
+          },
+        });
+    }
+  }
+
+  dismissDiscrepancies() {
+    this.showDiscrepancies = false;
   }
 }

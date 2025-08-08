@@ -26,25 +26,69 @@
     </div>
 
     <!-- Distribution Table -->
-    <div *ngIf="!loading" class="modal-body p-4">
-      <div class="distribution-overview mb-4">
-        <div class="overview-stats d-flex justify-content-between bg-dark-2 p-3 rounded">
-          <div class="stat-item text-center px-3">
-            <span class="stat-value d-block fw-bold text-primary">{{ distribution.length }}</span>
-            <span class="stat-label text-muted small">Locations</span>
-          </div>
-          <div class="stat-item text-center px-3">
-            <span class="stat-value d-block fw-bold text-success">{{ getTotalDistributed() }}</span>
-            <span class="stat-label text-muted small">Total Deployed</span>
-          </div>
-          <div class="stat-item text-center px-3">
-            <span class="stat-value d-block fw-bold text-warning">{{ (assetType.total_quantity || 0) - getTotalDistributed() }}</span>
-            <span class="stat-label text-muted small">Unassigned</span>
-          </div>
+    <div *ngIf="!loading" class="modal-body">
+      <!-- Consistency Warning -->
+      <div
+        *ngIf="showDiscrepancies && consistencyValidation?.has_discrepancies"
+        class="consistency-alert"
+      >
+        <div class="alert-header">
+          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          <h5>⚠️ Data Consistency Issues Detected</h5>
+          <button class="btn-dismiss" (click)="dismissDiscrepancies()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <p class="alert-message">
+          The following locations have discrepancies between declared and
+          computed quantities:
+        </p>
+        <ul class="discrepancy-list">
+          <li
+            *ngFor="let disc of consistencyValidation.discrepancies"
+            class="discrepancy-item"
+          >
+            <strong>{{ disc.location_name }}:</strong> Declared
+            {{ disc.declared_quantity }}, Found {{ disc.computed_quantity }}
+            <span
+              class="difference"
+              [class.positive]="disc.difference > 0"
+              [class.negative]="disc.difference < 0"
+            >
+              ({{ disc.difference > 0 ? '+' : '' }}{{ disc.difference }})
+            </span>
+          </li>
+        </ul>
+        <div class="alert-actions">
+          <button class="btn btn-warning" (click)="reconcileDistribution()">
+            <i class="fas fa-sync-alt"></i>
+            Auto-Reconcile Data
+          </button>
+          <button class="btn btn-secondary" (click)="validateConsistency()">
+            <i class="fas fa-redo"></i>
+            Re-validate
+          </button>
         </div>
       </div>
 
-      <!-- Distribution Table -->
+      <div class="distribution-overview">
+        <div class="overview-stats">
+          <div class="stat-item">
+            <span class="stat-value">{{ distribution.length }}</span>
+            <span class="stat-label">Locations</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ getTotalDistributed() }}</span>
+            <span class="stat-label">Total Deployed</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{
+              (assetType.total_quantity || 0) - getTotalDistributed()
+            }}</span>
+            <span class="stat-label">Unassigned</span>
+          </div>
+        </div>
+      </div>      <!-- Distribution Table -->
       <div class="table-container">
         <table class="distribution-table table table-dark table-hover table-borderless" *ngIf="distribution.length > 0">
           <thead class="border-bottom border-secondary">

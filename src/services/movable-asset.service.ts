@@ -66,4 +66,18 @@ export class MovableAssetService {
   getLocations(): Observable<ILocation[]> {
     return this.http.get<ILocation[]>(`${this.base}/getLocations.php`);
   }
+
+  // 🔍 Data Consistency & Validation
+
+  validateConsistency(asset_type_id: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.base}/validateConsistency.php?asset_type_id=${asset_type_id}`
+    );
+  }
+
+  reconcileDistribution(asset_type_id: number): Observable<any> {
+    return this.http.post<any>(`${this.base}/reconcileDistribution.php`, {
+      asset_type_id: asset_type_id,
+    });
+  }
 }
