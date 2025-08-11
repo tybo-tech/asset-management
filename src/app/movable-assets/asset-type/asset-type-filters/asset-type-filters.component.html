@@ -1,0 +1,62 @@
+<div class="filters-section">
+  <div class="search-controls">
+    <div class="search-input-group">
+      <i class="bi bi-search search-icon"></i>
+      <input
+        type="text"
+        class="form-control search-input"
+        placeholder="Search by name, category, or description..."
+        [value]="searchTerm"
+        (input)="onSearchTermChange($any($event.target).value)"
+        [disabled]="loading"
+      />
+      <button
+        *ngIf="searchTerm"
+        class="btn btn-clear"
+        (click)="onSearchTermChange('')"
+        title="Clear search">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+
+    <div class="filter-group">
+      <select
+        class="form-select category-filter"
+        [value]="filterCategory"
+        (change)="onFilterCategoryChange($any($event.target).value)"
+        [disabled]="loading">
+        <option value="">All Categories</option>
+        <option *ngFor="let category of availableCategories" [value]="category">
+          {{ category }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="action-controls">
+    <button
+      class="btn btn-outline-secondary btn-sm"
+      (click)="onClearFilters()"
+      [disabled]="loading"
+      title="Clear all filters">
+      <i class="bi bi-arrow-clockwise me-1"></i>
+      Reset Filters
+    </button>
+
+    <button
+      class="btn btn-success"
+      (click)="onAddNew()"
+      [disabled]="loading">
+      <i class="bi bi-plus-circle me-2"></i>
+      Add Asset Type
+    </button>
+
+    <button
+      class="btn btn-outline-dark"
+      (click)="onExportToCsv()"
+      [disabled]="loading">
+      <i class="bi bi-download me-2"></i>
+      Export CSV
+    </button>
+  </div>
+</div>

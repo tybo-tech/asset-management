@@ -94,12 +94,12 @@ export class AssetTypeFormComponent implements OnInit {
       // Add new asset type
       this.movableAssetService.addAssetType(this.asset).subscribe({
         next: (data) => {
-          if (data && data.item) {
+          // if (data && data.item) {
             console.log('Asset type added successfully:', data.item);
             this.formSubmitted.emit(data.item);
             this.saving = false;
             this.closeForm();
-          }
+          // }
         },
         error: (err) => {
           console.error('Error adding asset type:', err);

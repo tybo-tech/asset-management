@@ -168,6 +168,7 @@ export class AssetTypeListComponent implements OnInit {
   }
 
   onAssetTypeSaved(assetType: IAssetType) {
+    alert('Asset Type saved successfully!');
     // Refresh the list
     this.fetchAssetTypes();
     this.closeForm();

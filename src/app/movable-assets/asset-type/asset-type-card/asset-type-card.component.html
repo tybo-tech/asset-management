@@ -1,0 +1,50 @@
+<div class="asset-card">
+  <div class="card-header">
+    <div class="asset-info">
+      <h5 class="asset-name">{{ assetType.name }}</h5>
+      <span class="asset-category badge">{{ assetType.category }}</span>
+    </div>
+    <div class="asset-count">
+      <span class="count-number">{{ assetType.total_quantity || 0 }}</span>
+      <span class="count-label">Items</span>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <p class="asset-description" *ngIf="assetType.description">
+      {{ assetType.description }}
+    </p>
+    <p class="no-description" *ngIf="!assetType.description">
+      No description available
+    </p>
+  </div>
+
+  <div class="card-actions">
+    <button
+      class="btn btn-sm btn-outline-primary"
+      (click)="onEdit()"
+      [disabled]="loading"
+      title="Edit asset type">
+      <i class="bi bi-pencil-square"></i>
+      Edit
+    </button>
+
+    <button
+      class="btn btn-sm btn-outline-info"
+      (click)="onViewDistribution()"
+      [disabled]="loading"
+      title="View distribution">
+      <i class="bi bi-pie-chart"></i>
+      Distribution
+    </button>
+
+    <button
+      class="btn btn-sm btn-outline-warning"
+      (click)="onTransfer()"
+      [disabled]="loading || !assetType.total_quantity"
+      title="Transfer assets">
+      <i class="bi bi-arrow-left-right"></i>
+      Transfer
+    </button>
+  </div>
+</div>

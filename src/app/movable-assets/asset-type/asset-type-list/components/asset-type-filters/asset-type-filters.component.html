@@ -1,0 +1,98 @@
+<div class="filters-section">
+  <div class="search-controls">
+    <div class="search-input-group">
+      <i class="bi bi-search search-icon"></i>
+      <input
+        type="text"
+        class="form-control search-input"
+        placeholder="Search by name, category, or description..."
+        [value]="searchTerm"
+        [disabled]="loading"
+      />
+      <button
+        *ngIf="searchTerm"
+        class="btn btn-clear"
+        (click)="onClearSearch()"
+        title="Clear search">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+
+    <div class="filter-group">
+      <select
+        class="form-select category-filter"
+        [value]="filterCategory"
+        [disabled]="loading">
+        <option value="">All Categories</option>
+        <option *ngFor="let category of availableCategories" [value]="category">
+          {{ category }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="action-controls">
+    <button
+      class="btn btn-outline-secondary btn-sm"
+      (click)="onClearFilters()"
+      [disabled]="loading"
+      title="Clear all filters">
+      <i class="bi bi-arrow-clockwise me-1"></i>
+      Reset Filters
+    </button>
+
+    <button
+      class="btn btn-outline-info btn-sm"
+      (click)="onExportToCsv()"
+      [disabled]="loading"
+      title="Export to CSV">
+      <i class="bi bi-download me-1"></i>
+      Export CSV
+    </button>
+
+    <button
+      class="btn btn-primary btn-sm"
+      (click)="onAddNew()"
+      [disabled]="loading">
+      <i class="bi bi-plus-circle me-1"></i>
+      Add Asset Type
+    </button>
+  </div>
+</div>
+
+<div class="sort-controls">
+  <div class="sort-label">Sort by:</div>
+  <div class="sort-options">
+    <div
+      class="sort-option"
+      [class.active]="sortField === 'name'"
+      (click)="onSortBy('name')">
+      Name
+      <i [class]="getSortIcon('name')"></i>
+    </div>
+
+    <div
+      class="sort-option"
+      [class.active]="sortField === 'category'"
+      (click)="onSortBy('category')">
+      Category
+      <i [class]="getSortIcon('category')"></i>
+    </div>
+
+    <div
+      class="sort-option"
+      [class.active]="sortField === 'total_quantity'"
+      (click)="onSortBy('total_quantity')">
+      Quantity
+      <i [class]="getSortIcon('total_quantity')"></i>
+    </div>
+
+    <div
+      class="sort-option"
+      [class.active]="sortField === 'default_value'"
+      (click)="onSortBy('default_value')">
+      Value
+      <i [class]="getSortIcon('default_value')"></i>
+    </div>
+  </div>
+</div>

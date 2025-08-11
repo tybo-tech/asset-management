@@ -1,0 +1,66 @@
+<div class="asset-card">
+  <div class="asset-header">
+    <h5 class="asset-title">{{ assetType.name }}</h5>
+    <span class="asset-category">{{ assetType.category || 'Uncategorized' }}</span>
+  </div>
+
+  <div class="asset-details">
+    <div class="detail-row">
+      <span class="detail-label">Description</span>
+      <span class="detail-value">{{ assetType.description || 'No description' }}</span>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Quantity</span>
+      <span class="detail-value quantity"
+            [class.low-stock]="assetType.total_quantity && assetType.total_quantity < 10"
+            [class.no-stock]="!assetType.total_quantity">
+        {{ assetType.total_quantity || 0 }}
+      </span>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Unit Value</span>
+      <span class="detail-value value">{{ formatValue(assetType.default_value) }}</span>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Total Value</span>
+      <span class="detail-value value">
+        {{ formatValue((assetType.total_quantity || 0) * (assetType.default_value || 0)) }}
+      </span>
+    </div>
+  </div>
+
+  <div class="asset-actions">
+    <button
+      class="btn-action btn-edit"
+      (click)="onEdit()"
+      [disabled]="loading"
+      [attr.aria-label]="'Edit ' + assetType.name"
+      title="Edit Asset Type">
+      <i class="bi bi-pencil"></i>
+      <span class="action-text">Edit</span>
+    </button>
+
+    <button
+      class="btn-action btn-distribution"
+      (click)="onViewDistribution()"
+      [disabled]="loading || !assetType.total_quantity"
+      [attr.aria-label]="'View distribution for ' + assetType.name"
+      [title]="!assetType.total_quantity ? 'No assets to view distribution' : 'View Distribution'">
+      <i class="bi bi-geo-alt"></i>
+      <span class="action-text">Distribution</span>
+    </button>
+
+    <button
+      class="btn-action btn-transfer"
+      (click)="onTransfer()"
+      [disabled]="loading || !assetType.total_quantity"
+      [attr.aria-label]="'Transfer ' + assetType.name"
+      [title]="!assetType.total_quantity ? 'No assets available for transfer' : 'Transfer Assets'">
+      <i class="bi bi-arrow-left-right"></i>
+      <span class="action-text">Transfer</span>
+    </button>
+  </div>
+</div>
