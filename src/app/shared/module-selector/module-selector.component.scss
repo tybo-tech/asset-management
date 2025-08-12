@@ -1,0 +1,223 @@
+.module-selector {
+  position: relative;
+  user-select: none;
+
+  .current-module {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bs-dark);
+    border: 1px solid var(--bs-gray-600);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 280px;
+
+    &:hover {
+      background: var(--bs-gray-800);
+      border-color: var(--bs-gray-500);
+    }
+
+    .module-info {
+      display: flex;
+      align-items: center;
+      flex: 1;
+
+      .module-icon {
+        font-size: 1.25rem;
+        color: var(--bs-primary);
+        margin-right: 12px;
+        width: 20px;
+        text-align: center;
+      }
+
+      .module-details {
+        display: flex;
+        flex-direction: column;
+
+        .module-name {
+          font-weight: 600;
+          color: var(--bs-light);
+          font-size: 0.95rem;
+        }
+
+        .module-description {
+          color: var(--bs-gray-400);
+          font-size: 0.8rem;
+          margin-top: 2px;
+        }
+      }
+    }
+
+    .dropdown-arrow {
+      color: var(--bs-gray-400);
+      transition: transform 0.2s ease;
+      margin-left: 12px;
+
+      &.rotated {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .module-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bs-dark);
+    border: 1px solid var(--bs-gray-600);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    margin-top: 4px;
+    overflow: hidden;
+
+    .dropdown-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--bs-gray-700);
+      background: var(--bs-gray-900);
+
+      h6 {
+        margin: 0;
+        color: var(--bs-light);
+        font-weight: 600;
+      }
+
+      p {
+        margin: 4px 0 0 0;
+        font-size: 0.8rem;
+      }
+    }
+
+    .module-list {
+      max-height: 300px;
+      overflow-y: auto;
+
+      .module-option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        border-bottom: 1px solid var(--bs-gray-800);
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background: var(--bs-gray-800);
+        }
+
+        &.active {
+          background: rgba(var(--bs-primary-rgb), 0.1);
+          border-left: 3px solid var(--bs-primary);
+        }
+
+        .module-option-content {
+          display: flex;
+          align-items: center;
+          flex: 1;
+
+          .module-option-icon {
+            font-size: 1.1rem;
+            color: var(--bs-primary);
+            margin-right: 12px;
+            width: 18px;
+            text-align: center;
+          }
+
+          .module-option-details {
+            display: flex;
+            flex-direction: column;
+
+            .module-option-name {
+              font-weight: 500;
+              color: var(--bs-light);
+              font-size: 0.9rem;
+            }
+
+            .module-option-description {
+              color: var(--bs-gray-400);
+              font-size: 0.75rem;
+              margin-top: 2px;
+            }
+          }
+        }
+
+        .active-indicator {
+          color: var(--bs-success);
+          font-size: 1.1rem;
+        }
+      }
+    }
+
+    .dropdown-footer {
+      padding: 12px 16px;
+      background: var(--bs-gray-900);
+      border-top: 1px solid var(--bs-gray-700);
+
+      small {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+
+        i {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}
+
+// Animation for dropdown
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.module-dropdown {
+  animation: slideDown 0.2s ease-out;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .module-selector {
+    .current-module {
+      min-width: 250px;
+      padding: 10px 14px;
+
+      .module-info {
+        .module-details {
+          .module-description {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .module-dropdown {
+      .module-list {
+        .module-option {
+          .module-option-content {
+            .module-option-details {
+              .module-option-description {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

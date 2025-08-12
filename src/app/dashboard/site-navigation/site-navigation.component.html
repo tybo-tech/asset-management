@@ -1,23 +1,26 @@
 <nav class="site-nav d-flex flex-column justify-content-between">
   <div>
-    <ul class="nav flex-column">
+    <!-- Navigation Menu -->
+    <ul class="nav flex-column" *ngIf="moduleContext$ | async as context">
       <li class="nav-item brand-li">
         <a class="brand" href="/dashboard">
           <img [src]="logo" alt="" />
         </a>
       </li>
-      <li class="nav-item" *ngFor="let group of sideNavGroups">
+      
+      <li class="nav-item" *ngFor="let group of context.navigationGroups">
         <div class="nav-group" (click)="toggleGroup(group)">
           <i [class]="group.icon"></i>
           <span>{{ group.name }}</span>
+          <i class="bi bi-chevron-right toggle-icon" [class.rotated]="group.open"></i>
         </div>
-        <ul class="nav flex-column" *ngIf="group.open">
+        <ul class="nav flex-column sub-nav" *ngIf="group.open">
           <li class="nav-item" *ngFor="let item of group.items">
             <a
               class="nav-link d-flex align-items-center"
               [routerLink]="item.url"
               routerLinkActive="active"
-              (click)="toggleMenu.emit()"
+              (click)="onToggleMenu()"
               [routerLinkActiveOptions]="{ exact: true }"
             >
               <i [class]="item.icon" class="me-2"></i>
@@ -28,7 +31,14 @@
       </li>
     </ul>
   </div>
-  <div class="text-center p-3">
-    <small>© 2024 <b>Lodgistics V 1.21</b> Asset Management</small>
+  
+  <div class="footer-info text-center p-3">
+    <div class="current-module-info" *ngIf="moduleContext$ | async as context">
+      <small class="text-muted">
+        <i [class]="context.currentModule.icon" class="me-1"></i>
+        {{ context.currentModule.name }}
+      </small>
+    </div>
+    <small class="copyright">© 2024 <b>Lodgistics V 1.21</b> Asset Management</small>
   </div>
 </nav>

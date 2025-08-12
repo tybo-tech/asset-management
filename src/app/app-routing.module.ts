@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SignInComponent } from './accounts/sign-in/sign-in.component';
 import { SignupComponent } from './accounts/signup/signup.component';
 import { StockItemComponent } from './stock-module/stock-item/stock-item.component';
+import { ModuleSelectorComponent } from './shared/module-selector/module-selector.component';
 import { CategoryComponent } from './categories/category/category.component';
 import { ListCategoryComponent } from './categories/list-category/list-category.component';
 import { ListTransactionComponent } from './transactions/list-transaction/list-transaction.component';
@@ -159,6 +160,7 @@ export const declarations = [
   SignInComponent,
   SignupComponent,
   StockItemComponent,
+  ModuleSelectorComponent,
   ListStockComponent,
   ListCategoryComponent,
   ListTransactionComponent,
