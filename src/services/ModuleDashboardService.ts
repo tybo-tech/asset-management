@@ -5,6 +5,7 @@ import { ModuleNavigationService } from './ModuleNavigationService';
 import { CountService, ICountResponse } from './count.service';
 import { AssetService } from './AssetService';
 import { IKeyValue } from 'src/models/IKeyValue';
+import { IDoughnutChart, IBarChart } from 'src/models/Charts';
 
 export interface ModuleDashboardData {
   moduleId: string;
@@ -12,8 +13,8 @@ export interface ModuleDashboardData {
   stats?: ICountResponse;
   counts: IKeyValue[];
   chartData: {
-    locationDonut?: any;
-    stockBar?: any;
+    locationDonut?: IDoughnutChart;
+    stockBar?: IBarChart;
     topItems: any[]; // Flexible for both IKeyValue[] (columns) and actual data
     lowStockItems: any[]; // Flexible for both IKeyValue[] (columns) and actual data
   };
@@ -299,7 +300,7 @@ export class ModuleDashboardService {
   }
 
   // Chart data preparation methods
-  private prepareLocationDonut(stats: ICountResponse): any {
+  private prepareLocationDonut(stats: ICountResponse): IDoughnutChart | undefined {
     console.log('🔍 Preparing location donut - raw stats:', stats);
     console.log('🔍 Location data specifically:', stats.Location);
     console.log('🔍 Location type:', typeof stats.Location);
@@ -316,13 +317,28 @@ export class ModuleDashboardService {
         }
       ];
 
-      const donutData = {
+      const donutChart: IDoughnutChart = {
         labels: testLocationData.map(item => item.location || 'Unspecified Location'),
-        data: testLocationData.map(item => item.totalTransactions)
+        datasets: [{
+          label: 'Transactions by Location',
+          data: testLocationData.map(item => item.totalTransactions),
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(153, 102, 255)',
+            'rgb(255, 159, 64)',
+            'rgb(199, 199, 199)',
+            'rgb(83, 102, 255)',
+            'rgb(255, 99, 255)'
+          ],
+          hoverOffset: 4
+        }]
       };
 
-      console.log('🧪 Test donut data created:', donutData);
-      return donutData;
+      console.log('🧪 Test donut chart created:', donutChart);
+      return donutChart;
     }
 
     // Use Location data if available
@@ -333,31 +349,67 @@ export class ModuleDashboardService {
 
       if (filteredLocations.length === 0) {
         console.log('❌ No valid location data after filtering');
-        return null; // No valid data for chart
+        return undefined; // No valid data for chart
       }
 
-      const donutData = {
+      const donutChart: IDoughnutChart = {
         labels: filteredLocations.map(item => item.location || 'Unspecified Location'),
-        data: filteredLocations.map(item => item.totalTransactions)
+        datasets: [{
+          label: 'Transactions by Location',
+          data: filteredLocations.map(item => item.totalTransactions),
+          backgroundColor: [
+            'rgb(255, 99, 132)',   // Red
+            'rgb(54, 162, 235)',   // Blue
+            'rgb(255, 205, 86)',   // Yellow
+            'rgb(75, 192, 192)',   // Teal
+            'rgb(153, 102, 255)',  // Purple
+            'rgb(255, 159, 64)',   // Orange
+            'rgb(199, 199, 199)',  // Gray
+            'rgb(83, 102, 255)',   // Light Blue
+            'rgb(255, 99, 255)'    // Pink
+          ],
+          hoverOffset: 4
+        }]
       };
 
-      console.log('✅ Donut data prepared:', donutData);
-      return donutData;
+      console.log('✅ Donut chart prepared:', donutChart);
+      return donutChart;
     }
 
     console.log('❌ No Location data found in stats');
-    return null;
+    return undefined;
   }
 
-  private prepareStockBar(stats: ICountResponse): any {
+  private prepareStockBar(stats: ICountResponse): IBarChart | undefined {
     // Use stockLevels data if available
     if (stats.stockLevels?.length) {
-      return {
+      const barChart: IBarChart = {
         labels: stats.stockLevels.map(item => item.name),
-        data: stats.stockLevels.map(item => item.stockInHand)
+        datasets: [{
+          label: 'Stock Levels',
+          data: stats.stockLevels.map(item => item.stockInHand),
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.6)',
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 205, 86, 0.6)',
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(153, 102, 255, 0.6)',
+            'rgba(255, 159, 64, 0.6)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 205, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
       };
+      return barChart;
     }
-    return null;
+    return undefined;
   }
 
   private prepareAssetLocationDonut(stats: ICountResponse): any {
