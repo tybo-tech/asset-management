@@ -20,7 +20,7 @@ export class ListStockComponent {
   selectedStockItem?: StockItem;
   transaction?: Transaction;
   transactionType: 'restock' | 'usage' | 'damaged' = 'restock';
-  page = PAGES.assert;
+  page = PAGES.stockItem;
   search = '';
   loading = false;
   accessChecked = false;
