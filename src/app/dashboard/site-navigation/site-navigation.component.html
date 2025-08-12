@@ -8,6 +8,13 @@
         </a>
       </li>
 
+      <!-- Module Selector -->
+      <li class="nav-item module-selector-item">
+        <div class="module-selector-container">
+          <app-module-selector></app-module-selector>
+        </div>
+      </li>
+
       <li class="nav-item" *ngFor="let group of context.navigationGroups">
         <div class="nav-group" (click)="toggleGroup(group)">
           <i [class]="group.icon"></i>

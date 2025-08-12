@@ -1,4 +1,4 @@
-<div class="module-selector" (clickOutside)="closeDropdown()">
+<div class="module-selector">
   <div class="current-module" (click)="toggleDropdown()">
     <div class="module-info" *ngIf="currentModule$ | async as currentModule">
       <i [class]="currentModule.icon" class="module-icon"></i>
@@ -11,7 +11,7 @@
        [class.rotated]="isDropdownOpen"></i>
   </div>
 
-  <div class="module-dropdown" *ngIf="isDropdownOpen" [@slideDown]>
+  <div class="module-dropdown" *ngIf="isDropdownOpen">
     <div class="dropdown-header">
       <h6>Switch Module</h6>
       <p class="text-muted">Select a module to work with</p>
