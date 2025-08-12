@@ -1,92 +1,47 @@
 import { getId } from 'src/app/functions';
 import { Category } from './Category';
 import { Transaction } from './Transaction';
+import {
+  StockItem,
+  StockItemStatus,
+  StockItemMetadata,
+  StockItemListParams,
+  STOCK_ITEM_STATUS,
+  initStockItemListParams,
+  initStockItemMetadata,
+  initStockItem
+} from './StockItem';
 
-export interface Asset {
+// Legacy Asset interface - now extends StockItem for backward compatibility
+export interface Asset extends StockItem {
   assetType?: string;
-  category?: Category;
-  id: number;
-  code: string;
-  name: string;
-  categoryId: number; // Foreign key to Category
-  categoryName?: string;
-  imageUrl?: string;
-  slug: string;
-  status: AssetStatus;
-  createdDate: string; // ISO date string
-  createdBy?: string;
-  lastUpdatedDate?: string; // ISO date string
-  lastUpdatedBy?: string;
-  stockInHand?: number;
-  metadata: AssetMetadata;
-  transactions?: Transaction[];
-  size?: string;
   assetTypeId?: number;
 }
-export type AssetStatus =
-  | 'pending'
-  | 'In Progress'
-  | 'Approved'
-  | 'Rejected'
-  | 'Cancelled'
-  | 'Completed';
-  
- export const ASSET_STATUS: AssetStatus[] = [
-    'pending',
-    'In Progress',
-    'Approved',
-    'Rejected',
-    'Cancelled',
-    'Completed',
-  ];
 
-export interface AssetMetadata {
+// Legacy types that map to StockItem types
+export type AssetStatus = StockItemStatus;
+export const ASSET_STATUS = STOCK_ITEM_STATUS;
+export interface AssetMetadata extends StockItemMetadata {
   assetType?: string;
-  minimumStockAlert?: number;
-  serialNumber: string;
-  supplierId: number;
-  supplierName: string;
 }
-export interface AssetListParams {
-  category?: string;
-  orderBy?: string;
-  order?: string;
-  limit?: number;
-  offset?: number;
-}
+export interface AssetListParams extends StockItemListParams {}
+
+// Legacy functions that delegate to StockItem functions
 export function initAssetListParams(): AssetListParams {
-  return {
-    category: '',
-    orderBy: 'createdDate',
-    order: 'DESC',
-    limit: 10000,
-    offset: 0,
-  };
+  return initStockItemListParams();
 }
+
 export function initAssetMetadata(): AssetMetadata {
   return {
-    serialNumber: '',
-    supplierId: 0,
-    supplierName: '',
+    ...initStockItemMetadata(),
+    assetType: '',
   };
 }
+
 export function initAsset(name = '', code = ''): Asset {
   return {
-    id: 0,
-    stockInHand: undefined,
-    code,
-    name,
-    categoryId: 0,
-    imageUrl: '',
-    status: 'Completed',
-    createdDate: '',
-    createdBy: '',
-    lastUpdatedDate: '',
-    lastUpdatedBy: '',
+    ...initStockItem(name, code),
+    assetType: '',
     assetTypeId: 0,
-    categoryName: '',
-    size: '',
-    slug: getId(),
-    metadata: initAssetMetadata(),
   };
 }

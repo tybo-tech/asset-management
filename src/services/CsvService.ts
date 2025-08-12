@@ -83,7 +83,7 @@ export class CsvService {
             row.status,
             row.stockInHand || '0',
             row.categoryName || '',
-            row.metadata.assetType || '',
+            row.metadata['assetType'] || '',
             row.createdDate || '',
           ]
             .map((value) => value.toString().replace(/"/g, '""')) // Escape quotes

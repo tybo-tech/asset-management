@@ -10,7 +10,7 @@ export interface Transaction {
   transactionType: TransactionType;
   quantity?: number;
   transactionDate: string; // ISO date string
-  status: AssetStatus; // Status of the transaction
+  status: string; // Status of the transaction
   createdDate: string; // ISO date string
   createdBy?: string;
   lastUpdatedDate?: string; // ISO date string

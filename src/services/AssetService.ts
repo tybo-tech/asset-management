@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { TOAST, toast } from 'src/app/functions';
 import { Asset, AssetListParams, initAssetListParams } from 'src/models/Asset';
+import { StockItem } from 'src/models/StockItem';
+import { StockItemService } from './StockItemService';
 import { API } from 'src/app/constants';
 
 @Injectable({
@@ -14,118 +17,125 @@ export class AssetService {
   private assetList = new BehaviorSubject<Asset[]>([]);
   $assetList = this.assetList.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private stockItemService: StockItemService
+  ) {}
+
+  // ========== LEGACY ASSET METHODS (for backward compatibility) ==========
+  // These methods delegate to StockItemService for the actual operations
 
   // Create
-  add(asset: Asset) {
-    return this.http.post<Asset>(`${this.base}/add.php`, asset);
+  add(asset: Asset): Observable<Asset> {
+    // Convert Asset to StockItem and delegate
+    const stockItem: StockItem = this.assetToStockItem(asset);
+    return this.stockItemService.addStockItem(stockItem).pipe(
+      map((result: StockItem) => this.stockItemToAsset(result))
+    );
   }
 
   // Read all
+  getAll(params: AssetListParams = initAssetListParams()): void {
+    // Delegate to StockItemService
+    this.stockItemService.getAllStockItems(params);
 
-  // $category = isset($_GET['category']) ? $_GET['category'] : null;
-  // $orderBy  = isset($_GET['orderBy']) ? $_GET['orderBy'] : 'createdDate';
-  // $order    = isset($_GET['order']) ? $_GET['order'] : 'DESC';
-  // $limit    = isset($_GET['limit']) ? (int)$_GET['limit'] : 10000;
-  // $offset   = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
-getAll(params: AssetListParams = initAssetListParams()): void {
-  const searchParams = new URLSearchParams({
-    category: params.category ?? '',
-    orderBy: params.orderBy ?? 'createdDate',
-    order: params.order ?? 'DESC',
-    limit: params.limit !== undefined ? String(params.limit) : '10000',
-    offset: params.offset !== undefined ? String(params.offset) : '0',
-  }).toString();
-
-  this.http
-    .get<Asset[]>(`${this.base}/list.php?${searchParams}`)
-    .subscribe((data) => {
-      if (Array.isArray(data)) {
-        this.assetList.next(data);
-      }
+    // Subscribe to stock items and convert to assets
+    this.stockItemService.$stockItemList.subscribe((stockItems: StockItem[]) => {
+      const assets: Asset[] = stockItems.map(item => this.stockItemToAsset(item));
+      this.assetList.next(assets);
     });
-}
-
+  }
 
   // Read by ID
   getById(id: number): Observable<Asset> {
-    return this.http.get<Asset>(`${this.base}/getById.php?id=${id}`);
+    return this.stockItemService.getStockItemById(id).pipe(
+      map((stockItem: StockItem) => this.stockItemToAsset(stockItem))
+    );
   }
 
-  // get assets range
+  // Get assets range
   getAssetsRange(ids: number[]): Observable<Asset[]> {
-    return this.http.post<Asset[]>(`${this.base}/getByIds.php`, [...ids]);
+    return this.stockItemService.getStockItemsByIds(ids).pipe(
+      map((stockItems: StockItem[]) => stockItems.map(item => this.stockItemToAsset(item)))
+    );
   }
 
   getByCode(assetCode: string): Observable<Asset> {
-    return this.http.get<Asset>(`${this.base}/getByCode.php?code=${assetCode}`);
+    return this.stockItemService.getStockItemByCode(assetCode).pipe(
+      map((stockItem: StockItem) => this.stockItemToAsset(stockItem))
+    );
   }
 
   // Search
   search(query: string): Observable<Asset[]> {
-    return this.http.get<Asset[]>(`${this.base}/search.php?query=${query}`);
-  }
-
-  // Update
-  update(asset: Asset) {
-    return this.http.post<{ asset: Asset; message: string }>(
-      `${this.base}/update.php`,
-      asset
+    return this.stockItemService.searchStockItems(query).pipe(
+      map((stockItems: StockItem[]) => stockItems.map(item => this.stockItemToAsset(item)))
     );
   }
 
-  // adjustStock.php
+  // Update
+  update(asset: Asset): Observable<{ asset: Asset; message: string }> {
+    const stockItem: StockItem = this.assetToStockItem(asset);
+    return this.stockItemService.updateStockItem(stockItem).pipe(
+      map((result) => ({
+        asset: this.stockItemToAsset(result.stockItem),
+        message: result.message
+      }))
+    );
+  }
+
+  // Adjust Stock
   adjustStock(assetId: number, stockValue: number): Observable<Asset> {
-    return this.http.post<Asset>(`${this.base}/adjustStock.php`, {
-      assetId,
-      stockValue,
-    });
+    return this.stockItemService.adjustStock(assetId, stockValue).pipe(
+      map((stockItem: StockItem) => this.stockItemToAsset(stockItem))
+    );
   }
 
   // Delete
   remove(id: number): void {
-    this.http.post<void>(`${this.base}/remove.php`, { id }).subscribe(() => {
-      this.getAll();
-      toast('Asset deleted successfully', TOAST.success);
-    });
+    this.stockItemService.removeStockItem(id);
+    // Note: The toast notification is handled in StockItemService
   }
 
-  // adjustStock(assetId: number, stockValue: number): void {
-  //   this.getById(Number(assetId)).subscribe((asset) => {
-  //     if (asset && asset.id) {
-  //       if (!asset.stockInHand) {
-  //         asset.stockInHand = 0;
-  //       }
-  //       asset.stockInHand = Number(asset.stockInHand);
-  //       stockValue = Number(stockValue);
-  //       asset.stockInHand += stockValue;
-  //       this.http
-  //         .post<{
-  //           message: string;
-  //           success: boolean;
-  //           asset: Asset;
-  //         }>(`${this.base}/update.php`, asset)
-  //         .subscribe(() => {});
-  //     }
-  //   });
-  // }
+  // Download
+  download(url: string, filename: string): void {
+    this.stockItemService.download(url, filename);
+  }
 
-  download(url: string, filename: string) {
-    this.http
-      .get<Blob>(url, { responseType: 'blob' as 'json' })
-      .subscribe((response) => {
-        console.log(response);
-        let dataType = response.type;
-        let binaryData = [];
-        binaryData.push(response);
-        let downloadLink = document.createElement('a');
-        downloadLink.href = window.URL.createObjectURL(
-          new Blob(binaryData, { type: dataType })
-        );
-        if (filename) downloadLink.setAttribute('download', filename);
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-      });
+  // ========== CONVERSION METHODS ==========
+
+  private assetToStockItem(asset: Asset): StockItem {
+    return {
+      id: asset.id,
+      code: asset.code,
+      name: asset.name,
+      categoryId: asset.categoryId,
+      categoryName: asset.categoryName,
+      stockTypeId: asset.assetTypeId || 0, // Map assetTypeId to stockTypeId
+      stockType: asset.assetType,
+      imageUrl: asset.imageUrl,
+      size: asset.size,
+      slug: asset.slug,
+      status: asset.status,
+      createdDate: asset.createdDate,
+      createdBy: asset.createdBy,
+      lastUpdatedDate: asset.lastUpdatedDate,
+      lastUpdatedBy: asset.lastUpdatedBy,
+      stockInHand: asset.stockInHand || 0,
+      metadata: asset.metadata,
+      transactions: asset.transactions,
+      category: asset.category,
+    };
+  }
+
+  private stockItemToAsset(stockItem: StockItem): Asset {
+    return {
+      ...stockItem,
+      assetType: stockItem.stockType,
+      assetTypeId: stockItem.stockTypeId,
+      stockInHand: stockItem.stockInHand,
+    };
   }
 }
 
