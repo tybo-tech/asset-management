@@ -10,10 +10,10 @@ import { ModuleNavigationService } from 'src/services/ModuleNavigationService';
   styleUrls: ['./module-selector.component.scss']
 })
 export class ModuleSelectorComponent implements OnInit, OnDestroy {
-  
+
   currentModule$: Observable<Module> = this.moduleNavService.currentModule$;
   availableModules$: Observable<Module[]> = this.moduleNavService.getAvailableModules();
-  
+
   private destroy$ = new Subject<void>();
   isDropdownOpen = false;
 

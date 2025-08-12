@@ -14,10 +14,10 @@ import { UserService } from 'src/services/user.service';
 })
 export class SiteNavigationComponent implements OnInit, OnDestroy {
   @Output() toggleMenu = new EventEmitter<any>();
-  
+
   moduleContext$: Observable<ModuleContext> = this.moduleNavService.getModuleContext();
   logo = LOGO;
-  
+
   private destroy$ = new Subject<void>();
   private navigationGroups: ModuleSideNavGroup[] = [];
 
@@ -32,7 +32,7 @@ export class SiteNavigationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Initialize module navigation from storage
     this.moduleNavService.initializeFromStorage();
-    
+
     // Subscribe to module context changes
     this.moduleContext$
       .pipe(takeUntil(this.destroy$))
@@ -59,7 +59,7 @@ export class SiteNavigationComponent implements OnInit, OnDestroy {
     this.navigationGroups
       .filter(g => g !== group)
       .forEach(g => g.open = false);
-    
+
     // Toggle the selected group
     group.open = !group.open;
   }
@@ -76,11 +76,11 @@ export class SiteNavigationComponent implements OnInit, OnDestroy {
     const url = window.location.href;
     const splitUrl = url.split('/');
     const page = splitUrl.pop();
-    
+
     // Find the group that contains the current page
     let targetGroup = this.navigationGroups.find(group =>
-      group.items.some(item => 
-        item.url === `/${page}` || 
+      group.items.some(item =>
+        item.url === `/${page}` ||
         item.url.endsWith(`/${page}`)
       )
     );
@@ -94,12 +94,12 @@ export class SiteNavigationComponent implements OnInit, OnDestroy {
     const subPage = splitUrl[splitUrl.length - 2];
     if (subPage) {
       targetGroup = this.navigationGroups.find(group =>
-        group.items.some(item => 
+        group.items.some(item =>
           item.url.includes(`/${subPage}/`) ||
           item.url.includes(subPage)
         )
       );
-      
+
       if (targetGroup) {
         this.toggleGroup(targetGroup);
         return;

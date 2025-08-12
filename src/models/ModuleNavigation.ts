@@ -39,7 +39,7 @@ export const MODULES: Module[] = [
   },
   {
     id: 'asset-management',
-    name: 'Asset Management', 
+    name: 'Asset Management',
     icon: 'bi bi-archive',
     description: 'Track movable assets, locations, and transfers'
   }

@@ -7,7 +7,7 @@
         <small class="module-description">{{ currentModule.description }}</small>
       </div>
     </div>
-    <i class="bi bi-chevron-down dropdown-arrow" 
+    <i class="bi bi-chevron-down dropdown-arrow"
        [class.rotated]="isDropdownOpen"></i>
   </div>
 
@@ -16,9 +16,9 @@
       <h6>Switch Module</h6>
       <p class="text-muted">Select a module to work with</p>
     </div>
-    
+
     <div class="module-list">
-      <div class="module-option" 
+      <div class="module-option"
            *ngFor="let module of availableModules$ | async"
            [class.active]="(currentModule$ | async)?.id === module.id"
            (click)="switchModule(module.id)">
@@ -29,7 +29,7 @@
             <small class="module-option-description">{{ module.description }}</small>
           </div>
         </div>
-        <i class="bi bi-check-circle-fill active-indicator" 
+        <i class="bi bi-check-circle-fill active-indicator"
            *ngIf="(currentModule$ | async)?.id === module.id"></i>
       </div>
     </div>

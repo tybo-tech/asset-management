@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { 
-  Module, 
-  ModuleContext, 
-  ModuleSideNavGroup, 
+import {
+  Module,
+  ModuleContext,
+  ModuleSideNavGroup,
   UserModuleAccess,
   MODULES,
   MODULE_NAV_GROUPS,
@@ -17,10 +17,10 @@ import { UserService } from './user.service';
   providedIn: 'root'
 })
 export class ModuleNavigationService {
-  
+
   private currentModuleSubject = new BehaviorSubject<Module>(MODULES[0]); // Default to Stock Management
   private userModuleAccessSubject = new BehaviorSubject<UserModuleAccess[]>([]);
-  
+
   public currentModule$ = this.currentModuleSubject.asObservable();
   public userModuleAccess$ = this.userModuleAccessSubject.asObservable();
 
@@ -64,7 +64,7 @@ export class ModuleNavigationService {
           permissions: []
         }
       ];
-      
+
       this.userModuleAccessSubject.next(defaultAccess);
     }
   }
@@ -74,9 +74,9 @@ export class ModuleNavigationService {
    */
   getAvailableModules(): Observable<Module[]> {
     return this.userModuleAccess$.pipe(
-      map(accessList => 
-        MODULES.filter(module => 
-          accessList.some(access => 
+      map(accessList =>
+        MODULES.filter(module =>
+          accessList.some(access =>
             access.moduleId === module.id && access.isEnabled
           )
         )
@@ -94,10 +94,10 @@ export class ModuleNavigationService {
       this.userModuleAccess$
     ]).pipe(
       map(([currentModule, availableModules, userAccess]) => {
-        const currentUserAccess = userAccess.find(access => 
+        const currentUserAccess = userAccess.find(access =>
           access.moduleId === currentModule.id
         );
-        
+
         const navigationGroups = this.getFilteredNavigationGroups(
           currentModule.id,
           currentUserAccess?.permissions || []
@@ -125,7 +125,7 @@ export class ModuleNavigationService {
 
     // Check if user has access to this module
     const userAccess = this.userModuleAccessSubject.value;
-    const hasAccess = userAccess.some(access => 
+    const hasAccess = userAccess.some(access =>
       access.moduleId === moduleId && access.isEnabled
     );
 
@@ -135,10 +135,10 @@ export class ModuleNavigationService {
     }
 
     this.currentModuleSubject.next(targetModule);
-    
+
     // Store in localStorage for persistence
     localStorage.setItem('currentModule', moduleId);
-    
+
     return true;
   }
 
@@ -166,17 +166,17 @@ export class ModuleNavigationService {
    * Get filtered navigation groups based on module and permissions
    */
   private getFilteredNavigationGroups(
-    moduleId: string, 
+    moduleId: string,
     permissions: string[]
   ): ModuleSideNavGroup[] {
     return MODULE_NAV_GROUPS
-      .filter(group => 
+      .filter(group =>
         group.moduleId === moduleId || group.moduleId === 'shared'
       )
       .map(group => ({
         ...group,
-        items: group.items.filter(item => 
-          !item.requiredPermissions || 
+        items: group.items.filter(item =>
+          !item.requiredPermissions ||
           item.requiredPermissions.some(perm => permissions.includes(perm))
         )
       }))
@@ -199,13 +199,13 @@ export class ModuleNavigationService {
    */
   updateUserModuleAccess(access: UserModuleAccess[]): void {
     this.userModuleAccessSubject.next(access);
-    
+
     // Check if current module is still accessible
     const currentModule = this.getCurrentModule();
-    const hasAccess = access.some(a => 
+    const hasAccess = access.some(a =>
       a.moduleId === currentModule.id && a.isEnabled
     );
-    
+
     if (!hasAccess) {
       // Switch to first available module
       const firstAvailable = access.find(a => a.isEnabled);
@@ -222,7 +222,7 @@ export class ModuleNavigationService {
     return this.getModuleContext().pipe(
       map(context => {
         const breadcrumbs = [context.currentModule.name];
-        
+
         // Find matching feature in navigation
         for (const group of context.navigationGroups) {
           const feature = group.items.find(item => item.url === currentUrl);
@@ -232,7 +232,7 @@ export class ModuleNavigationService {
             break;
           }
         }
-        
+
         return breadcrumbs;
       })
     );

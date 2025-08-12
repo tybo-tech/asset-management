@@ -7,7 +7,7 @@
           <img [src]="logo" alt="" />
         </a>
       </li>
-      
+
       <li class="nav-item" *ngFor="let group of context.navigationGroups">
         <div class="nav-group" (click)="toggleGroup(group)">
           <i [class]="group.icon"></i>
@@ -31,7 +31,7 @@
       </li>
     </ul>
   </div>
-  
+
   <div class="footer-info text-center p-3">
     <div class="current-module-info" *ngIf="moduleContext$ | async as context">
       <small class="text-muted">
