@@ -19,6 +19,16 @@ export const PAGES = {
     updateSuccess: 'Asset updated Successfully',
     headers: ['Code', 'Name', 'Status', 'Stock', 'Category', 'Type', 'Actions'],
   },
+  stockItem: {
+    name: 'Stock Items',
+    id: 'stock-item',
+    addAction: 'Add Stock Item',
+    listUrl: '/list-stock',
+    addUrl: '/stock/add',
+    addSuccess: 'Stock Item Added Successfully',
+    updateSuccess: 'Stock Item updated Successfully',
+    headers: ['Code', 'Name', 'Status', 'Stock', 'Category', 'Type', 'Actions'],
+  },
   transaction: {
     name: 'Transactions',
     id: 'transaction',

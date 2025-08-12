@@ -11,7 +11,7 @@ import { API } from 'src/app/constants';
   providedIn: 'root',
 })
 export class StockItemService {
-  private readonly base = `${API}/stock-item`;
+  private readonly base = `${API}/stock-items`;
   private readonly stockTypeBase = `${API}/stock-type`;
   private stockItemList = new BehaviorSubject<StockItem[]>([]);
   private stockTypeList = new BehaviorSubject<StockType[]>([]);
@@ -117,6 +117,11 @@ export class StockItemService {
           this.stockTypeList.next(data);
         }
       });
+  }
+
+  // Get all Stock Types as Observable
+  getStockTypes(): Observable<StockType[]> {
+    return this.http.get<StockType[]>(`${this.stockTypeBase}/list.php`);
   }
 
   // Get Stock Type by ID

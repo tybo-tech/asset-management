@@ -1,23 +1,23 @@
 import { Component } from '@angular/core';
-import { Asset, AssetListParams } from 'src/models/Asset';
+import { StockItem, StockItemListParams } from 'src/models/StockItem';
 import { Category } from 'src/models/Category';
 import { PAGES } from 'src/models/Schema';
 import { FEATURE_NAMES } from 'src/models/SideNav';
 import { initTransaction, Transaction } from 'src/models/Transaction';
-import { AssetService } from 'src/services/AssetService';
+import { StockItemService } from 'src/services/StockItemService';
 import { CategoryService } from 'src/services/CategoryService';
 import { CsvService } from 'src/services/CsvService';
 import { UserService } from 'src/services/user.service';
 
 @Component({
-  selector: 'app-list-assert',
-  templateUrl: './list-assert.component.html',
-  styleUrls: ['./list-assert.component.scss'],
+  selector: 'app-list-stock',
+  templateUrl: './list-stock.component.html',
+  styleUrls: ['./list-stock.component.scss'],
 })
-export class ListAssertComponent {
-  list: Asset[] = [];
-  allItems: Asset[] = [];
-  selectedAsset?: Asset;
+export class ListStockComponent {
+  list: StockItem[] = [];
+  allItems: StockItem[] = [];
+  selectedStockItem?: StockItem;
   transaction?: Transaction;
   transactionType: 'restock' | 'usage' | 'damaged' = 'restock';
   page = PAGES.assert;
@@ -25,7 +25,7 @@ export class ListAssertComponent {
   loading = false;
   accessChecked = false;
   FEATURE_NAMES = FEATURE_NAMES;
-  orderBy: AssetListParams = {
+  orderBy: StockItemListParams = {
     orderBy: 'code',
     order: 'ASC',
     limit: 10000,
@@ -38,11 +38,11 @@ export class ListAssertComponent {
   selectedCategory = '';
   categories: string[] = [];
 
-  //__ Asset Type
-  selectedAssetType = '';
-  assetTypes: string[] = [];
+  //__ Stock Type (previously Asset Type)
+  selectedStockType = '';
+  stockTypes: string[] = [];
   constructor(
-    private assetService: AssetService,
+    private stockItemService: StockItemService,
     private csvService: CsvService,
     public userService: UserService
   ) {
@@ -58,11 +58,11 @@ export class ListAssertComponent {
   }
   load() {
     this.loading = true;
-    this.assetService.getAll(this.orderBy);
+    this.stockItemService.getAllStockItems(this.orderBy);
     this.getList();
   }
   getList() {
-    this.assetService.$assetList.subscribe((data) => {
+    this.stockItemService.$stockItemList.subscribe((data: StockItem[]) => {
       this.list = data || [];
       this.allItems = data || [];
       this.mapFilters();
@@ -74,33 +74,33 @@ export class ListAssertComponent {
   }
   mapFilters() {
     //categories
-    this.categories = this.list.map((asset) => asset.categoryName || '') || [];
+    this.categories = this.list.map((stockItem) => stockItem.categoryName || '') || [];
     this.categories = this.categories.filter(
-      (value, index, self) => self.indexOf(value) === index
+      (value: string, index: number, self: string[]) => self.indexOf(value) === index
     );
 
-    //asset types
-    this.assetTypes = this.list.map((asset) => asset.assetType || '') || [];
-    this.assetTypes = this.assetTypes.filter(
-      (value, index, self) => self.indexOf(value) === index
+    //stock types
+    this.stockTypes = this.list.map((stockItem) => stockItem.stockType || '') || [];
+    this.stockTypes = this.stockTypes.filter(
+      (value: string, index: number, self: string[]) => self.indexOf(value) === index
     );
   }
-  onRestock(asset: Asset) {
-    this.selectedAsset = asset;
+  onRestock(stockItem: StockItem) {
+    this.selectedStockItem = stockItem;
     this.transaction = initTransaction();
     this.transactionType = 'restock';
     // Logic for handling restocking, e.g., open a modal or redirect to a restocking form
   }
 
-  onUsage(asset: Asset) {
-    this.selectedAsset = asset;
+  onUsage(stockItem: StockItem) {
+    this.selectedStockItem = stockItem;
     this.transactionType = 'usage';
     this.transaction = initTransaction();
     // Logic for handling usage, e.g., open a modal or redirect to a usage form
   }
 
-  onDamages(asset: Asset) {
-    this.selectedAsset = asset;
+  onDamages(stockItem: StockItem) {
+    this.selectedStockItem = stockItem;
     this.transactionType = 'damaged';
     this.transaction = initTransaction();
     // Logic for handling usage, e.g., open a modal or redirect to a usage form
@@ -112,8 +112,8 @@ export class ListAssertComponent {
       list = list.filter((x) => x.categoryName === this.selectedCategory);
     }
 
-    if (this.selectedAssetType) {
-      list = list.filter((x) => x.assetType === this.selectedAssetType);
+    if (this.selectedStockType) {
+      list = list.filter((x) => x.stockType === this.selectedStockType);
     }
 
     this.list = list;
@@ -125,32 +125,32 @@ export class ListAssertComponent {
     this.filterList();
   }
 
-  onAssetTypeChange() {
+  onStockTypeChange() {
     this.filterList();
   }
 
   getExportName() {
-    if (!this.selectedCategory && !this.selectedAssetType)
-      return `assets_${new Date().toLocaleDateString()}.csv`;
+    if (!this.selectedCategory && !this.selectedStockType)
+      return `stock_items_${new Date().toLocaleDateString()}.csv`;
     // Generate a filename based on the filters
     const filters = [];
     if (this.selectedCategory) filters.push(this.selectedCategory);
-    if (this.selectedAssetType) filters.push(this.selectedAssetType);
-    return `assets_${filters.join('_')}.csv`;
+    if (this.selectedStockType) filters.push(this.selectedStockType);
+    return `stock_items_${filters.join('_')}.csv`;
   }
 
-  // Delete asset
+  // Delete stock item
   showConfirm = false;
-  assetToDelete?: Asset;
-  onDelete(asset: Asset) {
+  stockItemToDelete?: StockItem;
+  onDelete(stockItem: StockItem) {
     this.showConfirm = true;
-    this.assetToDelete = asset;
+    this.stockItemToDelete = stockItem;
   }
   handleConfirm(result: boolean): void {
-    if (result && this.assetToDelete) {
-      this.assetService.remove(this.assetToDelete.id);
+    if (result && this.stockItemToDelete) {
+      this.stockItemService.removeStockItem(this.stockItemToDelete.id);
     }
     this.showConfirm = false;
-    this.assetToDelete = undefined;
+    this.stockItemToDelete = undefined;
   }
 }

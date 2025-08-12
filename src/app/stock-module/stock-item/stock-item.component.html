@@ -49,35 +49,35 @@
             id="categoryId"
             [(ngModel)]="data.categoryId"
             [ngModelOptions]="{ standalone: true }"
-            (change)="filterAssetTypes()"
+            (change)="filterStockTypes()"
             required
           >
-            <option value="" disabled selected>Select Asset</option>
+            <option value="" disabled selected>Select Category</option>
             <option [value]="category.id" *ngFor="let category of categories">
               {{ category.name }}
             </option>
           </select>
-          <label for="transactionType">Category</label>
+          <label for="categoryId">Category</label>
         </div>
 
-        <!-- Asset Type -->
-        <div class="form-floating mb-4" *ngIf="assetTypes">
+        <!-- Stock Type -->
+        <div class="form-floating mb-4" *ngIf="stockTypes">
           <select
             class="form-select"
-            id="assetTypeId"
-            [(ngModel)]="data.assetTypeId"
+            id="stockTypeId"
+            [(ngModel)]="data.stockTypeId"
             [ngModelOptions]="{ standalone: true }"
             required
           >
-            <option value="" disabled selected>Select Asset Type</option>
+            <option value="" disabled selected>Select Stock Type</option>
             <option
-              [value]="assetType.id"
-              *ngFor="let assetType of assetTypes"
+              [value]="stockType.id"
+              *ngFor="let stockType of stockTypes"
             >
-              {{ assetType.name }}
+              {{ stockType.name }}
             </option>
           </select>
-          <label for="assetTypeId">Asset Type</label>
+          <label for="stockTypeId">Stock Type</label>
         </div>
       </div>
 
@@ -152,11 +152,11 @@
           </li>
         </ul>
         <app-transaction
-          *ngIf="selectedAsset && transaction"
-          [assert]="selectedAsset"
+          *ngIf="selectedStockItem && transaction"
+          [assert]="selectedStockItem"
           [data]="transaction"
           [transactionType]="transactionType"
-          (onClose)="selectedAsset = undefined"
+          (onClose)="selectedStockItem = undefined"
           [isAdd]="true"
           itemId="add"
         />
@@ -167,20 +167,20 @@
       <div class="body">
         <h6 class="mb-2">Transaction History</h6>
 
-        <!-- This is used to display the transaction history of the asset -->
+        <!-- This is used to display the transaction history of the stock item -->
         <app-asset-transactions
           [assetId]="data.id"
           [list]="data.transactions || []"
-          (refreshAsset)="refreshAsset()"
+          (refreshAsset)="refreshStockItem()"
         />
 
         <!-- This is used to create a new transaction -->
         <app-transaction
-          *ngIf="selectedAsset && transaction"
-          [assert]="selectedAsset"
+          *ngIf="selectedStockItem && transaction"
+          [assert]="selectedStockItem"
           [data]="transaction"
           [transactionType]="transactionType"
-          (onClose)="selectedAsset = undefined; refreshAsset()"
+          (onClose)="selectedStockItem = undefined; refreshStockItem()"
           [isAdd]="true"
           itemId="add"
         />

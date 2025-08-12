@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SignInComponent } from './accounts/sign-in/sign-in.component';
 import { SignupComponent } from './accounts/signup/signup.component';
-import { AssertComponent as StockComponent } from './asserts/assert/assert.component';
-import { ListAssertComponent as ListStockComponent } from './asserts/list-assert/list-assert.component';
+import { StockItemComponent } from './stock-module/stock-item/stock-item.component';
 import { CategoryComponent } from './categories/category/category.component';
 import { ListCategoryComponent } from './categories/list-category/list-category.component';
 import { ListTransactionComponent } from './transactions/list-transaction/list-transaction.component';
@@ -33,7 +32,7 @@ import { CaptureStockTakeComponent } from './stock-take/capture-stock-take/captu
 import { ListAssetTypesComponent } from './asset-types/list-asset-types/list-asset-types.component';
 import { AssetTypeComponent } from './asset-types/asset-type/asset-type.component';
 import { StatCardComponent } from 'src/stat-card/stat-card.component';
-import { AssetTransactionsComponent } from './asserts/asset-transactions/asset-transactions.component';
+import { AssetTransactionsComponent } from './stock-module/asset-transactions/asset-transactions.component';
 import { BarChartComponent } from './charts/bar-chart/bar-chart.component';
 import { DoughnutComponent } from './charts/doughnut/doughnut.component';
 import { LineChartComponent } from './charts/line-chart/line-chart.component';
@@ -53,6 +52,7 @@ import { ManageRolesComponent } from './roles/manage-roles/manage-roles.componen
 import { RoleComponent } from './roles/role/role.component';
 import { AssetTypeListComponent } from './movable-assets/asset-type/asset-type-list/asset-type-list.component';
 import { AssetTypeDetailComponent } from './movable-assets/asset-type/asset-type-detail/asset-type-detail.component';
+import { ListStockComponent } from './stock-module/list-stock/list-stock.component';
 
 const routes: Routes = [
   // Account
@@ -68,7 +68,7 @@ const routes: Routes = [
   { path: 'assets', component: AssetTypeListComponent },
 
   //Stock
-  { path: 'stock/:id', component: StockComponent },
+  { path: 'stock/:id', component: StockItemComponent },
   { path: 'list-stock', component: ListStockComponent },
   //requisition
   { path: 'requisition/:id', component: RequisitionAddComponent },
@@ -158,7 +158,7 @@ export const pipes = [
 export const declarations = [
   SignInComponent,
   SignupComponent,
-  StockComponent,
+  StockItemComponent,
   ListStockComponent,
   ListCategoryComponent,
   ListTransactionComponent,

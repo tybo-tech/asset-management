@@ -1,98 +1,101 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TOAST, toast } from 'src/app/functions';
-import { Asset, initAsset, initAssetMetadata } from 'src/models/Asset';
-import { AssetType } from 'src/models/AssetType';
+import { StockItem, initStockItem, initStockItemMetadata } from 'src/models/StockItem';
+import { StockType } from 'src/models/StockType';
 import { Category } from 'src/models/Category';
 import { PAGES } from 'src/models/Schema';
 import { initTransaction, Transaction } from 'src/models/Transaction';
-import { AssetService } from 'src/services/AssetService';
-import { AssetTypeService } from 'src/services/AssetTypeService';
+import { StockItemService } from 'src/services/StockItemService';
 import { CategoryService } from 'src/services/CategoryService';
-import { OtherInfoService } from 'src/services/other-info.service';
 
 @Component({
-  selector: 'app-assert',
-  templateUrl: './assert.component.html',
-  styleUrls: ['./assert.component.scss'],
+  selector: 'app-stock-item',
+  templateUrl: './stock-item.component.html',
+  styleUrls: ['./stock-item.component.scss'],
 })
-export class AssertComponent {
+export class StockItemComponent {
   id = '';
-  data?: Asset;
-  page = PAGES.assert;
+  data?: StockItem;
+  page = PAGES.stockItem;
   isAdd = false;
   loading = false;
 
   // Dropdowns
-  assetTypes: AssetType[] = [];
+  stockTypes: StockType[] = [];
   categories: Category[] = [];
-  allAssetTypes:AssetType[] = [];
+  allStockTypes: StockType[] = [];
 
   // Other Actions Properties
-  selectedAsset?: Asset;
+  selectedStockItem?: StockItem;
   transaction?: Transaction;
   transactionType: 'restock' | 'usage' | 'damaged' = 'restock';
+
   constructor(
     private activatedRoute: ActivatedRoute,
-    private assetService: AssetService,
-    private assetTypeService: AssetTypeService,
+    private stockItemService: StockItemService,
     private categoryService: CategoryService,
     private router: Router
   ) {
     activatedRoute.params.subscribe((p) => {
       this.id = p['id'];
       this.get();
-      this.getCatergories();
-      this.fetchAssetTypes();
+      this.getCategories();
+      this.fetchStockTypes();
     });
   }
-get title(){
-  return this.isAdd ? 'Add Asset' : 'Update Asset';
-}
-  getCatergories() {
+
+  get title() {
+    return this.isAdd ? 'Add Stock Item' : 'Update Stock Item';
+  }
+
+  getCategories() {
     this.loading = true;
     this.categoryService.getAll().subscribe((data) => {
       this.categories = data || [];
       this.loading = false;
     });
   }
-  fetchAssetTypes() {
+
+  fetchStockTypes() {
     this.loading = true;
-    this.assetTypeService
-      .getAll()
+    this.stockItemService
+      .getStockTypes()
       .subscribe((data) => {
-        this.assetTypes = data || [];
-        this.allAssetTypes = data || [];
+        this.stockTypes = data || [];
+        this.allStockTypes = data || [];
         this.loading = false;
       });
   }
 
-  filterAssetTypes() {
+  filterStockTypes() {
     if (!this.data || !this.data.categoryId) {
-      this.assetTypes = this.allAssetTypes;
+      this.stockTypes = this.allStockTypes;
       return;
     }
-    this.assetTypes = this.allAssetTypes;
+    this.stockTypes = this.allStockTypes;
     const categoryName =
       this.categories.find(
         (c) => Number(c.id) === Number(this.data?.categoryId)
       )?.name || '';
-    this.assetTypes = this.allAssetTypes.filter(
+    this.stockTypes = this.allStockTypes.filter(
       (t) => t.categoryName === categoryName
     );
   }
-  refreshAsset() {
+
+  refreshStockItem() {
     location.reload();
   }
+
   get() {
     if ('add' === this.id) {
       this.isAdd = true;
-      this.data = initAsset();
+      this.data = initStockItem();
       return;
     }
     this.isAdd = false;
     this.loading = true;
-    this.assetService.getById(Number(this.id)).subscribe((data) => {
+    this.stockItemService.getStockItemById(Number(this.id)).subscribe((data) => {
       this.data = data;
       this.loading = false;
       if (
@@ -100,10 +103,11 @@ get title(){
         ((this.data.metadata && typeof this.data.metadata !== 'object') ||
           !this.data.metadata)
       ) {
-        this.data.metadata = initAssetMetadata();
+        this.data.metadata = initStockItemMetadata();
       }
     });
   }
+
   save() {
     if (!this.data) return;
     if (!this.data.name || !this.data.code) {
@@ -114,53 +118,55 @@ get title(){
       toast('⚠️ Category is required', TOAST.warn);
       return;
     }
-    if (!this.data.assetTypeId) {
-      toast('⚠️ Asset Type  is required', TOAST.warn);
+    if (!this.data.stockTypeId) {
+      toast('⚠️ Stock Type is required', TOAST.warn);
       return;
     }
     if (!this.data.stockInHand) {
       this.data.stockInHand = 0;
     }
     // Add or Update
-    // We make sure that the asset code is unique
-    //Wheather we are adding or updating
-    this.isAdd && this.validateAssetCode(this.data.code);
-    !this.isAdd && this.validateAssetCode(this.data.code);
+    // We make sure that the stock item code is unique
+    // Whether we are adding or updating
+    this.isAdd && this.validateStockItemCode(this.data.code);
+    !this.isAdd && this.validateStockItemCode(this.data.code);
   }
 
-  updateAsset() {
+  updateStockItem() {
     this.data &&
-      this.assetService.update(this.data).subscribe((res) => {
-        if (res && res.asset && res.asset.id) {
-          toast('✅  Asset updated successfully', TOAST.success);
+      this.stockItemService.updateStockItem(this.data).subscribe((res) => {
+        if (res && res.stockItem && res.stockItem.id) {
+          toast('✅ Stock Item updated successfully', TOAST.success);
           this.page.listUrl && this.router.navigate([this.page.listUrl]);
         }
       });
   }
 
-  validateAssetCode(code: string) {
+  validateStockItemCode(code: string) {
     this.loading = true;
-    this.assetService.getByCode(code).subscribe((data) => {
+    this.stockItemService.getStockItemByCode(code).subscribe((data) => {
       this.loading = false;
       if (data && Number(data.id) === Number(this.id)) {
         this.callback();
         return;
       }
       if (data && data.id) {
-        toast('⚠️ Asset with the same code already exists', TOAST.warn);
+        toast('⚠️ Stock Item with the same code already exists', TOAST.warn);
         return;
       }
       this.callback();
     });
   }
+
   callback() {
-    this.isAdd ? this.insertNewAsset() : this.updateAsset();
+    this.isAdd ? this.insertNewStockItem() : this.updateStockItem();
   }
-  insertNewAsset() {
+
+  insertNewStockItem() {
     this.data &&
-      this.assetService.add(this.data).subscribe((res) => {
+      this.stockItemService.addStockItem(this.data).subscribe((res) => {
         if (res && res.id) {
-          toast('✅  Asset added successfully', TOAST.success);
+          toast('✅ Stock Item added successfully', TOAST.success);
           this.page.listUrl && this.router.navigate([this.page.listUrl]);
         }
       });
@@ -168,18 +174,17 @@ get title(){
 
   // Other Actions
 
-  onRestock(asset: Asset) {
-    this.selectedAsset = asset;
+  onRestock(stockItem: StockItem) {
+    this.selectedStockItem = stockItem;
     this.transaction = initTransaction();
     this.transactionType = 'restock';
     // Logic for handling restocking, e.g., open a modal or redirect to a restocking form
   }
 
-  onUsage(asset: Asset) {
-    this.selectedAsset = asset;
+  onUsage(stockItem: StockItem) {
+    this.selectedStockItem = stockItem;
     this.transactionType = 'usage';
     this.transaction = initTransaction();
     // Logic for handling usage, e.g., open a modal or redirect to a usage form
   }
-  
 }

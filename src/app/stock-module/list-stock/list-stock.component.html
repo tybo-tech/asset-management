@@ -1,4 +1,4 @@
-<app-bread pageName="List Assets" />
+<app-bread pageName="List Stock Items" />
 
 <div class="list-container" *ngIf="accessChecked">
   <div class="title-section">
@@ -50,14 +50,14 @@
         </option>
       </select>
 
-      <!-- Filter by asset type: -->
+      <!-- Filter by stock type: -->
       <select
         class="form-select me-2"
-        [(ngModel)]="selectedAssetType"
-        (change)="onAssetTypeChange()"
+        [(ngModel)]="selectedStockType"
+        (change)="onStockTypeChange()"
       >
         <option value="">All Types</option>
-        <option *ngFor="let item of assetTypes" [value]="item">
+        <option *ngFor="let item of stockTypes" [value]="item">
           {{ item }}
         </option>
       </select>
@@ -73,7 +73,7 @@
           {{ page.addAction }}
         </a>
 
-        <a 
+        <a
         *ngIf="userService.canAccess(FEATURE_NAMES.exportAssets)"
         class="btn btn-dark" (click)="exportToCsv()"> Export to CSV </a>
       </div>
@@ -106,7 +106,7 @@
       <div>{{ item.categoryName }}</div>
 
       <div class="mobile-header">Type</div>
-      <div>{{ item.assetType || "---" }}</div>
+      <div>{{ item.stockType || "---" }}</div>
 
       <div>
         <div class="dropdown">
@@ -139,7 +139,7 @@
               </button>
             </li>
             <li>
-              <button class="dropdown-item bg-danger" 
+              <button class="dropdown-item bg-danger"
               (click)="onDelete(item)">
                 <i class="bi bi-trash"></i> Delete
               </button>
@@ -154,11 +154,11 @@
       </div>
     </div>
     <app-transaction
-      *ngIf="selectedAsset && transaction"
-      [assert]="selectedAsset"
+      *ngIf="selectedStockItem && transaction"
+      [assert]="selectedStockItem"
       [data]="transaction"
       [transactionType]="transactionType"
-      (onClose)="selectedAsset = undefined"
+      (onClose)="selectedStockItem = undefined"
       [isAdd]="true"
       itemId="add"
     />
