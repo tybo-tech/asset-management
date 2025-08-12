@@ -6,7 +6,7 @@ import { Category } from './Category';
 export interface Transaction {
   slug: string;
   id: number;
-  assetId: number; // Foreign key to Asset
+  $stockItemId: number; // Foreign key to Asset
   transactionType: TransactionType;
   quantity?: number;
   transactionDate: string; // ISO date string
@@ -43,7 +43,7 @@ export function initComment(createdBy: string, comment: string): IComment {
 export function initTransaction(): Transaction {
   return {
     id: 0,
-    assetId: 0,
+    $stockItemId: 0,
     transactionType: 'restock',
     quantity: undefined,
     transactionDate: new Date().toISOString(),

@@ -263,5 +263,9 @@ export class ModuleNavigationService {
     // Apply the new module theme class
     const themeClass = `${moduleId}-theme`;
     document.body.classList.add(themeClass);
+
+    // Debug logging for testing
+    console.log(`🎨 Theme switched to: ${themeClass}`);
+    console.log(`📋 Current body classes:`, document.body.className);
   }
 }

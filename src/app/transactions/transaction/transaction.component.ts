@@ -81,7 +81,7 @@ export class TransactionComponent implements OnInit {
     if(this.loading) return;
     if (!this.data) return;
     this.data.transactionType = this.transactionType;
-    this.data.assetId = this.assert.id;
+    this.data.$stockItemId = this.assert.id;
     if (!this.isValid()) return;
 
     // this.dataService.setBaseUrl(this.page.id);

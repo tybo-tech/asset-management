@@ -71,7 +71,7 @@ export class AdjustStockComponent implements OnInit {
     this.data.metadata.reasonCode = 'Capture Error';
     this.data.createdBy = this.user?.UserId || '';
     this.data.lastUpdatedBy = this.user?.UserId || '';
-    this.data.assetId = this.assert?.id || 0;
+    this.data.$stockItemId = this.assert?.id || 0;
     this.data.status = 'Completed';
     this.data.transactionType = 'stock-adjustment';
   }

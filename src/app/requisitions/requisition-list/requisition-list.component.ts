@@ -178,7 +178,7 @@ export class RequisitionListComponent {
   }
   addTransaction(assert: Asset, quantity: number, roomId?: number) {
     const transaction = initTransaction();
-    transaction.assetId = assert.id;
+    transaction.$stockItemId = assert.id;
     transaction.quantity = quantity;
     //'restock' or 'usage'
     transaction.transactionType = this.isUsage ? 'usage' : 'restock';
