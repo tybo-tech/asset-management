@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ModuleNavigationService } from './ModuleNavigationService';
-import { CountService, ICountResponse } from './count.service';
+import { CountService, ICountResponse, ITopIssuedAsset, ILowStock } from './count.service';
 import { AssetService } from './AssetService';
 import { IKeyValue } from 'src/models/IKeyValue';
-import { IDoughnutChart, IBarChart } from 'src/models/Charts';
+import { IDoughnutChart, IBarChart, ILineChart } from 'src/models/Charts';
 
 export interface ModuleDashboardData {
   moduleId: string;
@@ -15,8 +15,9 @@ export interface ModuleDashboardData {
   chartData: {
     locationDonut?: IDoughnutChart;
     stockBar?: IBarChart;
-    topItems: any[]; // Flexible for both IKeyValue[] (columns) and actual data
-    lowStockItems: any[]; // Flexible for both IKeyValue[] (columns) and actual data
+    trendLine?: ILineChart; // New trend analysis chart
+    topItems: IKeyValue[]; // Strongly typed for key-value data structure
+    lowStockItems: IKeyValue[]; // Strongly typed for key-value data structure
   };
   loading: boolean;
 }
@@ -81,8 +82,9 @@ export class ModuleDashboardService {
             chartData: {
               locationDonut: this.prepareLocationDonut(stats),
               stockBar: this.prepareStockBar(stats),
-              topItems: stats.topIssuedAssets || [], // Use actual API data
-              lowStockItems: stats.lowStock || [] // Use actual API data
+              trendLine: this.prepareStockTrendLine(stats),
+              topItems: this.prepareTopItems(stats.topIssuedAssets || []), // Use actual API data
+              lowStockItems: this.prepareLowStockItems(stats.lowStock || []) // Use actual API data
             },
             loading: false
           };
@@ -122,8 +124,9 @@ export class ModuleDashboardService {
           chartData: {
             locationDonut: this.prepareAssetLocationDonut(stats),
             stockBar: this.prepareAssetConditionBar(stats),
-            topItems: stats.topIssuedAssets || [], // Use actual mock data for assets
-            lowStockItems: stats.lowStock || [] // Use actual mock data for low stock assets
+            trendLine: this.prepareAssetTrendLine(stats),
+            topItems: this.prepareTopItems(stats.topIssuedAssets || []), // Use actual mock data for assets
+            lowStockItems: this.prepareLowStockItems(stats.lowStock || []) // Use actual mock data for low stock assets
           },
           loading: false
         };
@@ -412,22 +415,115 @@ export class ModuleDashboardService {
     return undefined;
   }
 
-  private prepareAssetLocationDonut(stats: ICountResponse): any {
+  private prepareAssetLocationDonut(stats: ICountResponse): IDoughnutChart {
     // Transform data for asset location distribution
-    return {
+    const donutChart: IDoughnutChart = {
       labels: ['Office', 'Storage', 'Conference Room', 'Lobby'],
-      data: [45, 25, 20, 10],
-      backgroundColor: ['#4caf50', '#2e7d32', '#66bb6a', '#81c784']
+      datasets: [{
+        label: 'Assets by Location',
+        data: [45, 25, 20, 10],
+        backgroundColor: [
+          'rgb(76, 175, 80)',   // Green
+          'rgb(46, 125, 50)',   // Dark Green
+          'rgb(102, 187, 106)', // Light Green
+          'rgb(129, 199, 132)'  // Lighter Green
+        ],
+        hoverOffset: 4
+      }]
     };
+    return donutChart;
   }
 
-  private prepareAssetConditionBar(stats: ICountResponse): any {
+  private prepareAssetConditionBar(stats: ICountResponse): IBarChart {
     // Transform data for asset condition breakdown
-    return {
+    const barChart: IBarChart = {
       labels: ['New', 'Good', 'Fair', 'Needs Repair'],
-      data: [30, 45, 20, 5],
-      backgroundColor: ['#4caf50', '#66bb6a', '#ffeb3b', '#f44336']
+      datasets: [{
+        label: 'Assets by Condition',
+        data: [30, 45, 20, 5],
+        backgroundColor: [
+          'rgba(76, 175, 80, 0.6)',   // Green for New
+          'rgba(102, 187, 106, 0.6)', // Light Green for Good
+          'rgba(255, 235, 59, 0.6)',  // Yellow for Fair
+          'rgba(244, 67, 54, 0.6)'    // Red for Needs Repair
+        ],
+        borderColor: [
+          'rgb(76, 175, 80)',
+          'rgb(102, 187, 106)',
+          'rgb(255, 235, 59)',
+          'rgb(244, 67, 54)'
+        ],
+        borderWidth: 1
+      }]
     };
+    return barChart;
+  }
+
+  // Trend analysis chart methods
+  private prepareStockTrendLine(stats: ICountResponse): ILineChart {
+    // Create stock movement trend over time (simulated data - replace with actual API data)
+    const lineChart: ILineChart = {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      datasets: [{
+        label: 'Stock Movement Trend',
+        data: [65, 59, 80, 81, 56, 55],
+        fill: false,
+        borderColor: 'rgb(54, 162, 235)',
+        tension: 0.1
+      }]
+    };
+    return lineChart;
+  }
+
+  private prepareAssetTrendLine(stats: ICountResponse): ILineChart {
+    // Create asset utilization trend over time (simulated data - replace with actual API data)
+    const lineChart: ILineChart = {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      datasets: [{
+        label: 'Asset Utilization Trend',
+        data: [45, 52, 48, 61, 58, 63],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }]
+    };
+    return lineChart;
+  }
+
+  // Helper methods for data transformation
+  private prepareTopItems(topIssuedAssets: ITopIssuedAsset[]): IKeyValue[] {
+    if (!topIssuedAssets || topIssuedAssets.length === 0) {
+      return [];
+    }
+
+    return topIssuedAssets.map((item, index) => ({
+      key: item.name || `Item ${index + 1}`,
+      value: item.count?.toString() || '0',
+      data: {
+        url: item.url || '/list-assert',
+        icon: item.icon || 'trending_up',
+        assetId: item.assetId,
+        category: item.category
+      }
+    }));
+  }
+
+  private prepareLowStockItems(lowStockItems: ILowStock[]): IKeyValue[] {
+    if (!lowStockItems || lowStockItems.length === 0) {
+      return [];
+    }
+
+    return lowStockItems.map((item, index) => ({
+      key: item.name || `Item ${index + 1}`,
+      value: `${item.stockInHand || 0}/${item.minimumStockAlert || 0}`,
+      data: {
+        url: '/list-assert',
+        icon: 'warning',
+        stockLevel: item.stockInHand,
+        minLevel: item.minimumStockAlert,
+        id: item.id
+      }
+    }));
   }
 
   // Simulate asset data (to be replaced with real API calls)
@@ -442,9 +538,9 @@ export class ModuleDashboardService {
           other: [],
           category: [],
           topIssuedAssets: [
-            { assetName: 'Dell Laptop #001', roomName: 'Office 101', condition: 'Good' },
-            { assetName: 'Samsung Monitor #002', roomName: 'Office 102', condition: 'New' },
-            { assetName: 'Office Chair #003', roomName: 'Office 103', condition: 'Fair' }
+            { name: 'Dell Laptop #001', count: 15, category: 'Electronics', assetId: 1 },
+            { name: 'Samsung Monitor #002', count: 12, category: 'Electronics', assetId: 2 },
+            { name: 'Office Chair #003', count: 8, category: 'Furniture', assetId: 3 }
           ],
           lowStock: [
             { name: 'HP Printer #004', stockInHand: 1, minimumStockAlert: 2, id: 1 },

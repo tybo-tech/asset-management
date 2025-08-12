@@ -8,7 +8,7 @@ import { API } from 'src/app/constants';
 })
 export class CountService {
     private readonly base = `${API}/counts`;
-  
+
 
   constructor(private http: HttpClient, private router: Router) {}
   all() {
@@ -28,7 +28,7 @@ export interface ICount {
 }
 
 export interface ICountResponse {
-  topIssuedAssets: any[];
+  topIssuedAssets: ITopIssuedAsset[];
   user: ICount[];
   other: ICount[];
   restock: ICount[];
@@ -38,6 +38,15 @@ export interface ICountResponse {
   lowStock: ILowStock[];
   Location:ILocationCount[];
   stockLevels: IStockLevel[];
+}
+
+export interface ITopIssuedAsset {
+  name: string;
+  count: number;
+  assetId?: number;
+  category?: string;
+  url?: string;
+  icon?: string;
 }
 
 export interface ILowStock {
