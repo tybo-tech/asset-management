@@ -79,7 +79,7 @@ export class StockItemService {
   adjustStock(stockItemId: number, quantity: number): Observable<StockItem> {
     return this.http.post<StockItem>(`${this.base}/adjustStock.php`, {
       stockItemId,
-      quantity,
+      stockValue: quantity,
     });
   }
 

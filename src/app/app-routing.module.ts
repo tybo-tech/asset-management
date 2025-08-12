@@ -11,7 +11,6 @@ import { TransactionComponent } from './transactions/transaction/transaction.com
 import { UserComponent } from './users/user/user.component';
 import { ListUsersComponent } from './users/list-users/list-users.component';
 import { SiteNavigationComponent } from './dashboard/site-navigation/site-navigation.component';
-import { OverviewComponent } from './dashboard/overview/overview.component';
 import {
   SearchAssetPipe,
   SearchCatergoryPipe,
@@ -56,6 +55,7 @@ import { AssetTypeDetailComponent } from './movable-assets/asset-type/asset-type
 import { ListStockComponent } from './stock-module/list-stock/list-stock.component';
 import { AssetListComponent } from './asset-module/asset-list/asset-list.component';
 import { AssetDashboardComponent } from './asset-module/asset-dashboard/asset-dashboard.component';
+import { OverviewComponent } from './dashboard/overview/overview.component';
 
 const routes: Routes = [
   // Account

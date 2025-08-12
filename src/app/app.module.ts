@@ -28,6 +28,11 @@ import { AssetByLocationComponent } from './movable-assets/distribution/asset-by
 import { AssetTypeSelectComponent } from './movable-assets/shared/asset-type-select/asset-type-select.component';
 import { LocationSelectComponent } from './movable-assets/shared/location-select/location-select.component';
 import { TransferSummaryComponent } from './movable-assets/shared/transfer-summary/transfer-summary.component';
+import { NumbersChartComponent } from './charts/numbers-chart/numbers-chart.component';
+import { TableComponent } from './charts/table/table.component';
+import { DoughnutComponent } from './charts/doughnut/doughnut.component';
+import { BarChartComponent } from './charts/bar-chart/bar-chart.component';
+import { LineChartComponent } from './charts/line-chart/line-chart.component';
 
 // https://spruko.com/demo/zynix/dist/html/data-tables.html
 @NgModule({
@@ -57,6 +62,11 @@ import { TransferSummaryComponent } from './movable-assets/shared/transfer-summa
     AssetTypeSelectComponent,
     LocationSelectComponent,
     TransferSummaryComponent,
+    NumbersChartComponent,
+    TableComponent,
+    DoughnutComponent,
+    BarChartComponent,
+    LineChartComponent,
   ],
   imports: [
     BrowserModule,

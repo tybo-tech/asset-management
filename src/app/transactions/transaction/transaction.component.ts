@@ -7,7 +7,7 @@ import {
   TransactionType,
 } from 'src/models/Transaction';
 import { PAGES } from 'src/models/Schema';
-import { Asset, ASSET_STATUS } from 'src/models/Asset';
+import { StockItem, STOCK_ITEM_STATUS } from 'src/models/StockItem';
 import { TransactionService } from 'src/services/TransactionService';
 import {
   OtherInfo,
@@ -29,13 +29,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./transaction.component.scss'],
 })
 export class TransactionComponent implements OnInit {
-  @Input({ required: true }) assert!: Asset;
+  @Input({ required: true }) assert!: StockItem;
   @Input({ required: true }) data!: Transaction;
   @Input({ required: true }) itemId!: string;
   @Input({ required: true }) isAdd!: boolean;
   @Input({ required: true }) transactionType!: TransactionType;
-  @Output() onClose = new EventEmitter<Asset>();
-  statuses = ASSET_STATUS
+  @Output() onClose = new EventEmitter<StockItem>();
+  statuses = STOCK_ITEM_STATUS;
   page = PAGES.transaction;
   rooms: OtherInfo<ILocation>[] = [];
   suppliers: OtherInfo<ISupplier>[] = [];
@@ -81,7 +81,7 @@ export class TransactionComponent implements OnInit {
     if(this.loading) return;
     if (!this.data) return;
     this.data.transactionType = this.transactionType;
-    this.data.$stockItemId = this.assert.id;
+    this.data.stockItemId = this.assert.id;
     if (!this.isValid()) return;
 
     // this.dataService.setBaseUrl(this.page.id);
