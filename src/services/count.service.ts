@@ -41,12 +41,10 @@ export interface ICountResponse {
 }
 
 export interface ITopIssuedAsset {
-  name: string;
-  count: number;
-  assetId?: number;
-  category?: string;
-  url?: string;
-  icon?: string;
+  stockItemName: string;
+  stockItemCode: string;
+  categoryName: string;
+  totalIssued: string; // Note: API returns this as string, not number
 }
 
 export interface ILowStock {

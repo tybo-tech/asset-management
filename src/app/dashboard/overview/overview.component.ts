@@ -120,9 +120,10 @@ export class OverviewComponent implements OnInit, OnDestroy {
   // Column definitions for stock management tables
   private getStockTopItemsColumns(): IKeyValue[] {
     return [
-      { value: 'Name', key: 'assetName' },
-      { value: 'Issued', key: 'totalIssued' },
-      { value: 'Category', key: 'categoryName' }
+      { value: 'Name', key: 'stockItemName' }, // Fixed: API uses 'stockItemName'
+      { value: 'Code', key: 'stockItemCode' }, // Added: Show stock item code
+      { value: 'Total Issued', key: 'totalIssued' }, // Fixed: API uses 'totalIssued'
+      { value: 'Category', key: 'categoryName' } // Fixed: API uses 'categoryName'
     ];
   }
 
@@ -137,9 +138,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
   // Column definitions for asset management tables
   private getAssetTopItemsColumns(): IKeyValue[] {
     return [
-      { value: 'Asset Name', key: 'assetName' },
-      { value: 'Location', key: 'roomName' },
-      { value: 'Condition', key: 'condition' }
+      { value: 'Asset Name', key: 'name' }, // Fixed: changed from 'assetName' to 'name'
+      { value: 'Count', key: 'count' }, // Fixed: changed from 'roomName' to 'count'
+      { value: 'Category', key: 'category' } // Fixed: changed from 'condition' to 'category'
     ];
   }
 

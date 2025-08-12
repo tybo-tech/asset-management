@@ -497,13 +497,13 @@ export class ModuleDashboardService {
     }
 
     return topIssuedAssets.map((item, index) => ({
-      key: item.name || `Item ${index + 1}`,
-      value: item.count?.toString() || '0',
+      key: item.stockItemName || `Item ${index + 1}`,
+      value: item.totalIssued?.toString() || '0',
       data: {
-        url: item.url || '/list-assert',
-        icon: item.icon || 'trending_up',
-        assetId: item.assetId,
-        category: item.category
+        url: '/list-assert',
+        icon: 'trending_up',
+        stockItemCode: item.stockItemCode,
+        categoryName: item.categoryName
       }
     }));
   }
@@ -538,9 +538,9 @@ export class ModuleDashboardService {
           other: [],
           category: [],
           topIssuedAssets: [
-            { name: 'Dell Laptop #001', count: 15, category: 'Electronics', assetId: 1 },
-            { name: 'Samsung Monitor #002', count: 12, category: 'Electronics', assetId: 2 },
-            { name: 'Office Chair #003', count: 8, category: 'Furniture', assetId: 3 }
+            { stockItemName: 'Dell Laptop #001', stockItemCode: 'DL001', categoryName: 'Electronics', totalIssued: '15' },
+            { stockItemName: 'Samsung Monitor #002', stockItemCode: 'SM002', categoryName: 'Electronics', totalIssued: '12' },
+            { stockItemName: 'Office Chair #003', stockItemCode: 'OC003', categoryName: 'Furniture', totalIssued: '8' }
           ],
           lowStock: [
             { name: 'HP Printer #004', stockInHand: 1, minimumStockAlert: 2, id: 1 },
