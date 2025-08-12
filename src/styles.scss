@@ -13,6 +13,42 @@
   --background-darker: #353b48;
   --border: 1px solid #2f3640;
   --smooth-dark: #363636;
+
+  // Module-specific theme variables
+  --module-accent: var(--primary);
+  --module-background: var(--background);
+  --module-background-darker: var(--background-darker);
+  --module-border: var(--border);
+}
+
+// Stock Management Theme (Default)
+body.stock-management-theme {
+  --module-accent: #0d47a1;
+  --module-background: #1a1a2e;
+  --module-background-darker: #16213e;
+  --module-border: 1px solid #16213e;
+  --primary: #1976d2;
+
+  /* Top bar styling for stock management */
+  .app-header {
+    background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%) !important;
+    border-bottom: 2px solid #1976d2 !important;
+  }
+}
+
+// Asset Management Theme
+body.asset-management-theme {
+  --module-accent: #2e7d32;
+  --module-background: #1b2a1b;
+  --module-background-darker: #2d4a2d;
+  --module-border: 1px solid #2d4a2d;
+  --primary: #4caf50;
+
+  /* Top bar styling for asset management */
+  .app-header {
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%) !important;
+    border-bottom: 2px solid #4caf50 !important;
+  }
 }
 
 @import "toast.scss";

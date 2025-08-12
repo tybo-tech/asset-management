@@ -1,8 +1,16 @@
-<div class="top-bar" *ngIf="user">
+<div class="top-bar app-header" *ngIf="user">
   <div class="d-flex align-items-center justify-content-between gap-4">
-    <div class="menu" (click)="toggleMenu.emit()">
-      <i class="bi bi-list"></i>
+    <div class="left-section d-flex align-items-center gap-3">
+      <div class="menu" (click)="toggleMenu.emit()">
+        <i class="bi bi-list"></i>
+      </div>
+
+      <!-- Module Selector -->
+      <div class="module-selector-wrapper">
+        <app-module-selector></app-module-selector>
+      </div>
     </div>
+
     <div class="d-flex align-items-center gap-2 position-relative">
       <input
         class="form-control m-0"

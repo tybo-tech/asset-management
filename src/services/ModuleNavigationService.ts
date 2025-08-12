@@ -27,6 +27,10 @@ export class ModuleNavigationService {
   constructor(private userService: UserService) {
     // Initialize with default access - replace with actual API call
     this.initializeUserModuleAccess();
+
+    // Initialize theme based on current module
+    const currentModuleId = localStorage.getItem('currentModule') || 'stock-management';
+    this.applyModuleTheme(currentModuleId);
   }
 
   /**
@@ -136,6 +140,9 @@ export class ModuleNavigationService {
 
     this.currentModuleSubject.next(targetModule);
 
+    // Apply module-specific theme
+    this.applyModuleTheme(moduleId);
+
     // Store in localStorage for persistence
     localStorage.setItem('currentModule', moduleId);
 
@@ -236,5 +243,14 @@ export class ModuleNavigationService {
         return breadcrumbs;
       })
     );
+  }
+
+  private applyModuleTheme(moduleId: string): void {
+    // Remove any existing module theme classes
+    document.body.classList.remove('stock-management-theme', 'asset-management-theme');
+
+    // Apply the new module theme class
+    const themeClass = `${moduleId}-theme`;
+    document.body.classList.add(themeClass);
   }
 }
