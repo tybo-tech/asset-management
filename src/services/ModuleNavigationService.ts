@@ -64,8 +64,19 @@ export class ModuleNavigationService {
         {
           userId: Number(user.UserId),
           moduleId: 'asset-management',
-          isEnabled: false, // User doesn't have access to this module
-          permissions: []
+          isEnabled: true, // Enable asset management module
+          permissions: [
+            'view_asset_overview',
+            'view_assets',
+            'create_assets',
+            'edit_assets',
+            'delete_assets',
+            'view_asset_transactions',
+            'transfer_assets',
+            'manage_asset_types',
+            'manage_asset_locations',
+            'view_asset_reports'
+          ]
         }
       ];
 

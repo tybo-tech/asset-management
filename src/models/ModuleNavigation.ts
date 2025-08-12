@@ -118,7 +118,7 @@ export const MODULE_FEATURES: ModuleFeature[] = [
     name: 'List Assets',
     description: 'View all movable assets',
     moduleId: 'asset-management',
-    url: '/assets',
+    url: '/asset-list',
     icon: 'bi bi-list',
     requiredPermissions: ['view_assets']
   },

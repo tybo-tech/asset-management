@@ -54,6 +54,8 @@ import { RoleComponent } from './roles/role/role.component';
 import { AssetTypeListComponent } from './movable-assets/asset-type/asset-type-list/asset-type-list.component';
 import { AssetTypeDetailComponent } from './movable-assets/asset-type/asset-type-detail/asset-type-detail.component';
 import { ListStockComponent } from './stock-module/list-stock/list-stock.component';
+import { AssetListComponent } from './asset-module/asset-list/asset-list.component';
+import { AssetDashboardComponent } from './asset-module/asset-dashboard/asset-dashboard.component';
 
 const routes: Routes = [
   // Account
@@ -64,7 +66,9 @@ const routes: Routes = [
   { path: 'sign-up/:id', component: SignupComponent },
   { path: 'profile', component: ProfileComponent },
 
-  //Asset
+  //Asset Management Module
+  { path: 'asset-dashboard', component: AssetDashboardComponent },
+  { path: 'asset-list', component: AssetListComponent },
   { path: 'asset/:id', component: AssetTypeDetailComponent },
   { path: 'assets', component: AssetTypeListComponent },
 
@@ -197,5 +201,7 @@ export const declarations = [
   ListAssetTypesComponent,
   AssetTypeComponent,
   InitStockTakeComponent,
-  RequisitionAddComponent
+  RequisitionAddComponent,
+  AssetListComponent,
+  AssetDashboardComponent
 ];

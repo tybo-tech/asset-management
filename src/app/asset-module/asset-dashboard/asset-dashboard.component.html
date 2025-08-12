@@ -1,0 +1,210 @@
+<div class="asset-dashboard">
+  <!-- Header -->
+  <div class="dashboard-header mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h2 class="text-light mb-1">Asset Management Dashboard</h2>
+        <p class="text-muted">Monitor and manage your organizational assets</p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-light" (click)="navigateToReports()">
+          <i class="bi bi-graph-up me-2"></i>
+          Reports
+        </button>
+        <button class="btn btn-primary" (click)="navigateToAssets()">
+          <i class="bi bi-list-ul me-2"></i>
+          View All Assets
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading dashboard...</span>
+    </div>
+    <p class="text-muted mt-3">Loading dashboard data...</p>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!isLoading">
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+      <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="stat-card">
+          <div class="stat-card-body">
+            <div class="stat-icon bg-primary">
+              <i class="bi bi-box-seam"></i>
+            </div>
+            <div class="stat-info">
+              <h3 class="stat-number">{{ totalAssets }}</h3>
+              <p class="stat-label">Total Assets</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="stat-card">
+          <div class="stat-card-body">
+            <div class="stat-icon bg-success">
+              <i class="bi bi-check-circle"></i>
+            </div>
+            <div class="stat-info">
+              <h3 class="stat-number">{{ activeAssets }}</h3>
+              <p class="stat-label">Active Assets</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="stat-card">
+          <div class="stat-card-body">
+            <div class="stat-icon bg-warning">
+              <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <div class="stat-info">
+              <h3 class="stat-number">{{ lowStockAssets }}</h3>
+              <p class="stat-label">Low Stock</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+        <div class="stat-card">
+          <div class="stat-card-body">
+            <div class="stat-icon bg-secondary">
+              <i class="bi bi-pause-circle"></i>
+            </div>
+            <div class="stat-info">
+              <h3 class="stat-number">{{ inactiveAssets }}</h3>
+              <p class="stat-label">Inactive Assets</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts and Recent Activity Row -->
+    <div class="row">
+      <!-- Asset Status Chart -->
+      <div class="col-lg-6 mb-4">
+        <div class="card dashboard-card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-pie-chart me-2"></i>
+              Asset Status Distribution
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <!-- Placeholder for chart - you can integrate Chart.js or other charting library -->
+              <div class="chart-placeholder">
+                <div class="chart-legend">
+                  <div class="legend-item" *ngFor="let label of assetStatusChart.labels; let i = index">
+                    <span
+                      class="legend-color"
+                      [style.background-color]="assetStatusChart.colors[i]"
+                    ></span>
+                    <span class="legend-label">{{ label }}: {{ assetStatusChart.data[i] }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Assets -->
+      <div class="col-lg-6 mb-4">
+        <div class="card dashboard-card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-clock-history me-2"></i>
+              Recently Added Assets
+            </h5>
+          </div>
+          <div class="card-body">
+            <div *ngIf="recentAssets.length === 0" class="text-center py-4">
+              <i class="bi bi-inbox display-4 text-muted"></i>
+              <p class="text-muted mt-2">No recent assets</p>
+            </div>
+
+            <div *ngIf="recentAssets.length > 0" class="recent-assets-list">
+              <div
+                *ngFor="let asset of recentAssets"
+                class="recent-asset-item"
+              >
+                <div class="asset-icon">
+                  <i class="bi bi-box-seam"></i>
+                </div>
+                <div class="asset-details">
+                  <h6 class="asset-name">{{ asset.name }}</h6>
+                  <small class="text-muted">{{ asset.code }} • {{ asset.categoryName || 'Uncategorized' }}</small>
+                </div>
+                <div class="asset-status">
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'bg-success': asset.status === 'active',
+                      'bg-warning': asset.status === 'pending',
+                      'bg-danger': asset.status === 'out_of_stock',
+                      'bg-secondary': asset.status === 'inactive'
+                    }"
+                  >
+                    {{ asset.status | titlecase }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card dashboard-card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-lightning me-2"></i>
+              Quick Actions
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-3 col-md-6 mb-3">
+                <button class="btn btn-outline-primary w-100 quick-action-btn">
+                  <i class="bi bi-plus-circle mb-2 d-block"></i>
+                  Add New Asset
+                </button>
+              </div>
+              <div class="col-lg-3 col-md-6 mb-3">
+                <button class="btn btn-outline-success w-100 quick-action-btn">
+                  <i class="bi bi-arrow-up-right-circle mb-2 d-block"></i>
+                  Stock Adjustment
+                </button>
+              </div>
+              <div class="col-lg-3 col-md-6 mb-3">
+                <button class="btn btn-outline-info w-100 quick-action-btn">
+                  <i class="bi bi-arrow-left-right mb-2 d-block"></i>
+                  Transfer Assets
+                </button>
+              </div>
+              <div class="col-lg-3 col-md-6 mb-3">
+                <button class="btn btn-outline-warning w-100 quick-action-btn">
+                  <i class="bi bi-file-earmark-text mb-2 d-block"></i>
+                  Generate Report
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
