@@ -49,17 +49,29 @@
     <p class="text-muted mt-3">Loading assets...</p>
   </div>
 
-  <!-- Asset Grid -->
-  <div *ngIf="!isLoading" class="row">
-    <div
-      *ngFor="let asset of assets$ | async; trackBy: trackByAssetId"
-      class="col-xl-3 col-lg-4 col-md-6 mb-4"
-    >
-      <div class="card asset-card h-100">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <div class="asset-status">
-            <span
-              class="badge"
+  <!-- Asset Table -->
+  <div *ngIf="!isLoading && ((assets$ | async)?.length ?? 0) > 0" class="table-responsive" style="max-height: 60vh; overflow-y: auto;">
+    <table class="table table-hover table-dark text-white align-middle">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Code</th>
+          <th>Category</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Stock on Hand</th>
+          <th>Size</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let asset of assets$ | async; trackBy: trackByAssetId">
+          <td class="text-white">{{ asset.name }}</td>
+          <td class="text-white">{{ asset.code }}</td>
+          <td class="text-white">{{ asset.categoryName || 'Uncategorized' }}</td>
+          <td class="text-white">{{ asset.stockType || 'Standard' }}</td>
+          <td>
+            <span class="badge"
               [ngClass]="{
                 'bg-success': asset.status === 'active',
                 'bg-warning': asset.status === 'pending',
@@ -70,98 +82,36 @@
             >
               {{ asset.status | titlecase }}
             </span>
-          </div>
-          <div class="dropdown">
-            <button
-              class="btn btn-sm btn-outline-secondary dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
+          </td>
+          <td>
+            <span
+              class="fw-bold"
+              [ngClass]="{
+                'text-success': asset.stockInHand > 10,
+                'text-warning': asset.stockInHand > 0 && asset.stockInHand <= 10,
+                'text-danger': asset.stockInHand === 0
+              }"
             >
-              <i class="bi bi-three-dots-vertical"></i>
-            </button>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#" (click)="onViewDetails(asset)">
-                <i class="bi bi-eye me-2"></i>View Details
-              </a></li>
-              <li><a class="dropdown-item" href="#" (click)="onEdit(asset)">
-                <i class="bi bi-pencil me-2"></i>Edit
-              </a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-danger" href="#" (click)="onDelete(asset)">
-                <i class="bi bi-trash me-2"></i>Delete
-              </a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <!-- Asset Image -->
-          <div class="asset-image-container mb-3">
-            <img
-              [src]="asset.imageUrl || 'assets/default-asset.png'"
-              [alt]="asset.name"
-              class="asset-image"
-              (error)="onImageError($event)"
-            >
-          </div>
-
-          <!-- Asset Info -->
-          <div class="asset-info">
-            <h6 class="card-title text-truncate" [title]="asset.name">
-              {{ asset.name }}
-            </h6>
-            <p class="card-text">
-              <small class="text-muted">Code: {{ asset.code }}</small>
-            </p>
-            <p class="card-text">
-              <small class="text-muted">Category: {{ asset.categoryName || 'Uncategorized' }}</small>
-            </p>
-            <p class="card-text">
-              <small class="text-muted">Type: {{ asset.stockType || 'Standard' }}</small>
-            </p>
-          </div>
-
-          <!-- Stock Information -->
-          <div class="stock-info mt-3">
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="text-muted">Stock on Hand:</span>
-              <span
-                class="fw-bold"
-                [ngClass]="{
-                  'text-success': asset.stockInHand > 10,
-                  'text-warning': asset.stockInHand > 0 && asset.stockInHand <= 10,
-                  'text-danger': asset.stockInHand === 0
-                }"
-              >
-                {{ asset.stockInHand }}
-              </span>
+              {{ asset.stockInHand }}
+            </span>
+          </td>
+          <td class="text-white">{{ asset.size || '-' }}</td>
+          <td>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-outline-primary" (click)="onViewDetails(asset)">
+                <i class="bi bi-eye me-1"></i> View
+              </button>
+              <button class="btn btn-sm btn-primary" (click)="onEdit(asset)">
+                <i class="bi bi-pencil me-1"></i> Edit
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="onDelete(asset)">
+                <i class="bi bi-trash me-1"></i> Delete
+              </button>
             </div>
-            <div *ngIf="asset.size" class="mt-1">
-              <small class="text-muted">Size: {{ asset.size }}</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-footer">
-          <div class="d-flex justify-content-between">
-            <button
-              class="btn btn-sm btn-outline-primary flex-fill me-2"
-              (click)="onViewDetails(asset)"
-            >
-              <i class="bi bi-eye me-1"></i>
-              View
-            </button>
-            <button
-              class="btn btn-sm btn-primary flex-fill"
-              (click)="onEdit(asset)"
-            >
-              <i class="bi bi-pencil me-1"></i>
-              Edit
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- Empty State -->
