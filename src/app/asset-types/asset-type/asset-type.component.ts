@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toast } from 'src/app/functions';
-import { AssetType, initAssetType } from 'src/models/AssetType';
+import { StockType, initAssetType } from 'src/models/AssetType';
 import { Category } from 'src/models/Category';
 import { PAGES } from 'src/models/Schema';
-import { AssetTypeService } from 'src/services/AssetTypeService';
+import { StockTypeService } from 'src/services/StockTypeService';
 import { CategoryService } from 'src/services/CategoryService';
 import { UserService } from 'src/services/user.service';
 
@@ -15,16 +15,16 @@ import { UserService } from 'src/services/user.service';
 })
 export class AssetTypeComponent {
   page = PAGES.assetType;
-  data?: AssetType;
+  data?: StockType;
   id = 0;
   categories: Category[] = [];
-  assetTypes: AssetType[] = [];
+  assetTypes: StockType[] = [];
   loading = false;
   constructor(
-    private srvc: AssetTypeService,
+    private srvc: StockTypeService,
     private categoryService: CategoryService,
     private activatedRoute: ActivatedRoute,
-    private assetTypeService: AssetTypeService,
+    private assetTypeService: StockTypeService,
     private userService: UserService,
     private router: Router
   ) {
@@ -97,7 +97,7 @@ export class AssetTypeComponent {
   }
 
   fetchAssetTypes() {
-    this.srvc.getAll().subscribe((data) => {
+    this.srvc.list().subscribe((data) => {
       this.assetTypes = data || [];
     });
   }

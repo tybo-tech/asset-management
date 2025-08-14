@@ -1,5 +1,5 @@
 import { getId } from 'src/app/functions';
-import { AssetType } from './AssetType';
+import { StockType } from './AssetType';
 
 export interface Category {
 
@@ -15,7 +15,7 @@ export interface Category {
   lastUpdatedBy?: string;
 
   // import
-  assetTypes?: AssetType[]; // for import
+  assetTypes?: StockType[]; // for import
 }
 
 export function initCategory(name = '', code=''): Category {

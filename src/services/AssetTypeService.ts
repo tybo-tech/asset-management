@@ -1,68 +1,37 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { TOAST, toast } from 'src/app/functions';
-import { AssetType } from 'src/models/AssetType';
-import { API } from 'src/app/constants';
-import { IResponse } from 'src/models/IResponse';
+import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+export interface AssetType {
+  id?: number;
+  name: string;
+  code: string;
+  // Add other fields as needed
+}
+
+@Injectable({ providedIn: 'root' })
 export class AssetTypeService {
-  private readonly base = `${API}/asset-types`;
+  private baseUrl = '/api/assetType';
 
-  private assetTypeList = new BehaviorSubject<AssetType[]>([]);
-  $assetTypeList = this.assetTypeList.asObservable();
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient, private router: Router) {}
-
-  // Create
-  add(assetType: AssetType) {
-    return this.http.post<IResponse<AssetType>>(
-      `${this.base}/add.php`,
-      assetType
-    );
-  }
-  addMany(assetType: AssetType) {
-    return this.http.post<AssetType>(`${this.base}/aadd-many.php`, assetType);
+  add(assetType: AssetType): Observable<any> {
+    return this.http.post(`${this.baseUrl}/add.php`, assetType);
   }
 
-  // Read all
-  getAll() {
-    return this.http.get<AssetType[]>(`${this.base}/list.php`);
-  }
-
-  // Read by ID
   getById(id: number): Observable<AssetType> {
-    return this.http.get<AssetType>(`${this.base}/getById.php?id=${id}`);
+    return this.http.get<AssetType>(`${this.baseUrl}/getById.php?id=${id}`);
   }
 
-  getByCode(code: string): Observable<AssetType> {
-    return this.http.get<AssetType>(`${this.base}/getByCode.php?code=${code}`);
+  list(): Observable<AssetType[]> {
+    return this.http.get<AssetType[]>(`${this.baseUrl}/list.php`);
   }
 
-  getByCategory(categoryId: number): Observable<AssetType[]> {
-    return this.http.get<AssetType[]>(
-      `${this.base}/getByCategory.php?categoryId=${categoryId}`
-    );
+  update(assetType: AssetType): Observable<any> {
+    return this.http.post(`${this.baseUrl}/update.php`, assetType);
   }
 
-  // Update
-  update(assetType: AssetType) {
-    return this.http.put<IResponse<AssetType>>(`${this.base}/update.php`, assetType);
-  }
-
-  // Delete
-  remove(id: number) {
-    return this.http.delete<void>(`${this.base}/remove.php?id=${id}`);
-  }
-
-  // Status stats
-  counts(): Observable<{ Label: string; Value: number }[]> {
-    return this.http.get<{ Label: string; Value: number }[]>(
-      `${this.base}/counts.php`
-    );
+  remove(id: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/remove.php`, { id });
   }
 }

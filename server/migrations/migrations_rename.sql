@@ -62,3 +62,6 @@ COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
 SET sql_mode = @old_sql_mode;
+
+
+ALTER TABLE `asset_types` ADD `asset_code` VARCHAR(20) NULL DEFAULT NULL AFTER `name`;

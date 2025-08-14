@@ -1,8 +1,9 @@
 // src/models/AssetType.ts
 
 import { Asset } from "./Asset";
+import { StockItem } from "./StockItem";
 
-export interface AssetType {
+export interface StockType {
   categoryName?: string;
   id: number;
   code: string;
@@ -16,10 +17,10 @@ export interface AssetType {
   lastUpdatedDate?: string; // ISO datetime string
   lastUpdatedBy?:string ;
 
-  assets?: Asset[]; // for import
+  assets?: StockItem[]; // for import
 }
 
-export function initAssetType(name = '', code = '', categoryId = 0): AssetType {
+export function initAssetType(name = '', code = '', categoryId = 0): StockType {
   return {
     id: 0,
     code,

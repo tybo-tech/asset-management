@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { toast } from 'src/app/functions';
-import { AssetType } from 'src/models/AssetType';
+import { StockType } from 'src/models/AssetType';
 import { PAGES } from 'src/models/Schema';
-import { AssetTypeService } from 'src/services/AssetTypeService';
+import { StockTypeService } from 'src/services/StockTypeService';
 
 @Component({
   selector: 'app-list-asset-types',
@@ -11,22 +11,22 @@ import { AssetTypeService } from 'src/services/AssetTypeService';
 })
 export class ListAssetTypesComponent {
   showConfirmDelete = false;
-  itemToDelete: AssetType | undefined;
+  itemToDelete: StockType | undefined;
   page = PAGES.assetType;
   loading = false;
-  assetTypes: AssetType[] = [];
+  assetTypes: StockType[] = [];
   search = '';
-  constructor(private assetTypeService: AssetTypeService) {
+  constructor(private assetTypeService: StockTypeService) {
     this.getAll();
   }
   getAll() {
-    this.assetTypeService.getAll().subscribe((data) => {
+    this.assetTypeService.list().subscribe((data) => {
       this.assetTypes = data || [];
       this.loading = false;
     });
   }
 
-  deleteAssetType(item: AssetType) {
+  deleteAssetType(item: StockType) {
     this.itemToDelete = item;
     this.showConfirmDelete = true;
   }
